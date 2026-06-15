@@ -85,19 +85,13 @@
       inset: 0;
       background-size: cover;
       background-position: center top;
-      transition: background-image 0.8s ease;
     }
 
     #hero-bg::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        to top,
-        var(--bg) 0%,
-        rgba(10,10,15,0.7) 40%,
-        rgba(10,10,15,0.2) 100%
-      );
+      background: linear-gradient(to top, var(--bg) 0%, rgba(10,10,15,0.7) 40%, rgba(10,10,15,0.2) 100%);
     }
 
     .hero-content {
@@ -136,7 +130,6 @@
       color: var(--muted);
     }
 
-    .hero-meta span { display: flex; align-items: center; gap: 4px; }
     .rating { color: #ffd700 !important; font-weight: 700; }
 
     .hero-desc {
@@ -341,8 +334,6 @@
       flex-wrap: wrap;
     }
 
-    #modal-meta .rating { color: #ffd700; font-weight: 700; }
-
     #modal-genero {
       display: inline-block;
       background: rgba(229,9,20,0.15);
@@ -403,7 +394,6 @@
       border-radius: 12px;
       overflow: hidden;
       background: #000;
-      position: relative;
     }
 
     #player-container.active { display: block; }
@@ -413,14 +403,6 @@
       aspect-ratio: 16/9;
       border: none;
       display: block;
-    }
-
-    /* Capa invisible encima del iframe que intercepta clicks hacia afuera */
-    #player-blocker {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
     }
 
     #loading {
@@ -448,13 +430,7 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #empty {
-      display: none;
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--muted);
-    }
-
+    #empty { display: none; text-align: center; padding: 80px 20px; color: var(--muted); }
     #empty.active { display: block; }
     #empty h3 { font-size: 22px; margin-bottom: 8px; color: var(--text); }
 
@@ -533,7 +509,6 @@
       <div class="servidores-titulo">Seleccioná un servidor</div>
       <div id="servidores-btns"></div>
       <div id="player-container">
-        <div id="player-blocker"></div>
         <iframe
           id="player-iframe"
           allowfullscreen
@@ -545,22 +520,27 @@
 </div>
 
 <script>
+  // ===== REGISTRAR SERVICE WORKER =====
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('[SW] Registrado:', reg.scope))
+      .catch(err => console.log('[SW] Error:', err));
+  }
+
   const SUPABASE_URL = "https://uqsachuontvqomhnybxs.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
 
-  // ===== BLOQUEO AGRESIVO DE POPUPS =====
+  // Bloquear popups y nuevas pestañas
   window.open = function() { return null; };
 
-  // Bloquear cualquier link que intente abrir nueva pestaña
   document.addEventListener('click', function(e) {
     const a = e.target.closest('a');
-    if (a && (a.target === '_blank' || a.href && !a.href.startsWith(window.location.origin))) {
+    if (a && a.href && !a.href.startsWith(location.origin)) {
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
     }
   }, true);
 
-  // Interceptar cuando el iframe intenta abrir ventana
   window.addEventListener('blur', function() {
     setTimeout(function() {
       if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
@@ -656,7 +636,13 @@
     player.classList.remove('active');
     iframe.src = '';
 
-    const servidores = pelicula.servidores || [];
+    // Ordenar: streamwish y vidhide primero, doodstream último
+    const orden = ['streamwish', 'vidhide', 'filemoon', 'varios', 'doodstream'];
+    const servidores = [...(pelicula.servidores || [])].sort((a, b) => {
+      const ia = orden.findIndex(o => (a.nombre || '').toLowerCase().includes(o));
+      const ib = orden.findIndex(o => (b.nombre || '').toLowerCase().includes(o));
+      return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+    });
 
     if (servidores.length === 0) {
       btns.innerHTML = '<p style="color: var(--muted); font-size: 13px;">Sin servidores disponibles.</p>';
