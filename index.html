@@ -530,9 +530,18 @@
   const SUPABASE_URL = "https://uqsachuontvqomhnybxs.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
 
-  // Bloquear popups y nuevas pestañas
+  // ===== BLOQUEO AGRESIVO =====
+
+  // 1. Bloquear window.open
   window.open = function() { return null; };
 
+  // 2. Evitar que la página principal navegue a otro lado
+  window.addEventListener('beforeunload', (e) => {
+    e.preventDefault();
+    e.returnValue = '';
+  });
+
+  // 3. Bloquear clicks en links externos
   document.addEventListener('click', function(e) {
     const a = e.target.closest('a');
     if (a && a.href && !a.href.startsWith(location.origin)) {
@@ -541,13 +550,31 @@
     }
   }, true);
 
+  // 4. Si el iframe roba el foco, volver inmediatamente
   window.addEventListener('blur', function() {
     setTimeout(function() {
       if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
         window.focus();
       }
-    }, 100);
+    }, 50);
   });
+
+  // 5. Vigilar si la URL de la página cambia y volver al inicio
+  const urlOriginal = location.href;
+  setInterval(function() {
+    if (location.href !== urlOriginal && !location.href.includes('#')) {
+      history.pushState(null, '', urlOriginal);
+    }
+  }, 200);
+
+  // 6. Bloquear history.pushState malicioso
+  const pushStateOriginal = history.pushState.bind(history);
+  history.pushState = function(state, title, url) {
+    if (url && !url.toString().startsWith(location.origin) && !url.toString().startsWith('/') && !url.toString().startsWith('#')) {
+      return;
+    }
+    return pushStateOriginal(state, title, url);
+  };
 
   let todasLasPeliculas = [];
   let peliculaHero = null;
@@ -636,7 +663,7 @@
     player.classList.remove('active');
     iframe.src = '';
 
-    // Ordenar: streamwish y vidhide primero, doodstream último
+    // Streamwish primero, doodstream último
     const orden = ['streamwish', 'vidhide', 'filemoon', 'varios', 'doodstream'];
     const servidores = [...(pelicula.servidores || [])].sort((a, b) => {
       const ia = orden.findIndex(o => (a.nombre || '').toLowerCase().includes(o));
