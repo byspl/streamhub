@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamHub</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --card: #1a1a24;
+      --accent: #e50914;
+      --accent2: #ff6b6b;
+      --text: #ffffff;
+      --muted: #8888a0;
+      --border: #2a2a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: linear-gradient(to bottom, rgba(10,10,15,0.98), transparent);
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      width: 280px;
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 14px;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-box input::placeholder { color: var(--muted); }
+
+    #hero {
+      position: relative;
+      height: 70vh;
+      min-height: 500px;
+      display: flex;
+      align-items: flex-end;
+      padding: 60px 40px;
+      overflow: hidden;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center top;
+      transition: background-image 0.8s ease;
+    }
+
+    #hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        var(--bg) 0%,
+        rgba(10,10,15,0.7) 40%,
+        rgba(10,10,15,0.2) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .hero-meta span { display: flex; align-items: center; gap: 4px; }
+    .rating { color: #ffd700 !important; font-weight: 700; }
+
+    .hero-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #ccc;
+      margin-bottom: 24px;
+      max-width: 500px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .hero-buttons { display: flex; gap: 12px; }
+
+    .btn-play {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-play:hover { background: #c40812; transform: scale(1.02); }
+
+    .btn-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-info:hover { background: rgba(255,255,255,0.25); }
+
+    #catalogo { padding: 20px 40px 60px; }
+
+    .seccion-titulo {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .seccion-titulo::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      transition: all 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--accent);
+      box-shadow: 0 12px 32px rgba(229,9,20,0.25);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-info { padding: 10px 12px; }
+
+    .card-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card-genero { font-size: 10px; color: var(--accent2); font-weight: 600; }
+
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    #modal-overlay.active { display: flex; }
+
+    #modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    #modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(0,0,0,0.6);
+      border: none;
+      color: white;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    #modal-close:hover { background: var(--accent); }
+
+    #modal-header {
+      position: relative;
+      height: 280px;
+      overflow: hidden;
+      border-radius: 16px 16px 0 0;
+    }
+
+    #modal-backdrop {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    #modal-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--surface) 0%, transparent 60%);
+    }
+
+    #modal-body { padding: 24px 28px 28px; }
+
+    #modal-titulo {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    #modal-meta {
+      display: flex;
+      gap: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    #modal-meta .rating { color: #ffd700; font-weight: 700; }
+
+    #modal-genero {
+      display: inline-block;
+      background: rgba(229,9,20,0.15);
+      color: var(--accent2);
+      border: 1px solid rgba(229,9,20,0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    #modal-desc {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #bbb;
+      margin-bottom: 24px;
+    }
+
+    .servidores-titulo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    #servidores-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .servidor-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      text-transform: capitalize;
+    }
+
+    .servidor-btn:hover,
+    .servidor-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    #player-container {
+      display: none;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      position: relative;
+    }
+
+    #player-container.active { display: block; }
+
+    #player-iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+      display: block;
+    }
+
+    /* Capa invisible encima del iframe que intercepta clicks hacia afuera */
+    #player-blocker {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: var(--bg);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #loading.active { display: flex; }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #empty {
+      display: none;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
+    #empty.active { display: block; }
+    #empty h3 { font-size: 22px; margin-bottom: 8px; color: var(--text); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    @media (max-width: 600px) {
+      nav { padding: 12px 16px; }
+      #hero { padding: 40px 16px; }
+      #catalogo { padding: 16px 16px 40px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+      .search-box { width: 180px; }
+      #modal-body { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🎬 Stream</div>
+  <div class="search-box">
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="#8888a0">
+      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+    </svg>
+    <input type="text" id="search-input" placeholder="Buscar película..."/>
+  </div>
+</nav>
+
+<div id="hero">
+  <div id="hero-bg"></div>
+  <div class="hero-content">
+    <span class="hero-badge">⚡ Destacada</span>
+    <h1 class="hero-title" id="hero-titulo">Cargando...</h1>
+    <div class="hero-meta">
+      <span class="rating" id="hero-rating">★ —</span>
+      <span id="hero-año">—</span>
+      <span id="hero-genero">—</span>
+    </div>
+    <p class="hero-desc" id="hero-desc"></p>
+    <div class="hero-buttons">
+      <button class="btn-play" id="hero-play">▶ Reproducir</button>
+      <button class="btn-info" id="hero-info">ℹ Más info</button>
+    </div>
+  </div>
+</div>
+
+<div id="catalogo">
+  <div class="seccion-titulo">Todas las películas</div>
+  <div class="grid" id="grid"></div>
+  <div id="empty">
+    <h3>Sin resultados</h3>
+    <p>No encontramos películas con ese nombre.</p>
+  </div>
+</div>
+
+<div id="loading" class="active">
+  <div class="spinner"></div>
+  <p style="color: var(--muted); font-size: 14px;">Cargando catálogo...</p>
+</div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <button id="modal-close">✕</button>
+    <div id="modal-header">
+      <img id="modal-backdrop" src="" alt=""/>
+    </div>
+    <div id="modal-body">
+      <h2 id="modal-titulo"></h2>
+      <div id="modal-meta">
+        <span class="rating" id="modal-rating"></span>
+        <span id="modal-año"></span>
+      </div>
+      <div id="modal-genero"></div>
+      <p id="modal-desc"></p>
+      <div class="servidores-titulo">Seleccioná un servidor</div>
+      <div id="servidores-btns"></div>
+      <div id="player-container">
+        <div id="player-blocker"></div>
+        <iframe
+          id="player-iframe"
+          allowfullscreen
+          allow="autoplay; fullscreen; picture-in-picture"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://uqsachuontvqomhnybxs.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
+
+  // ===== BLOQUEO AGRESIVO DE POPUPS =====
+  window.open = function() { return null; };
+
+  // Bloquear cualquier link que intente abrir nueva pestaña
+  document.addEventListener('click', function(e) {
+    const a = e.target.closest('a');
+    if (a && (a.target === '_blank' || a.href && !a.href.startsWith(window.location.origin))) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Interceptar cuando el iframe intenta abrir ventana
+  window.addEventListener('blur', function() {
+    setTimeout(function() {
+      if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+        window.focus();
+      }
+    }, 100);
+  });
+
+  let todasLasPeliculas = [];
+  let peliculaHero = null;
+
+  async function cargarPeliculas() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/peliculas?select=*&order=id.desc`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      const data = await res.json();
+      todasLasPeliculas = data;
+      renderCatalogo(data);
+      if (data.length > 0) setHero(data[0]);
+      document.getElementById('loading').classList.remove('active');
+    } catch (e) {
+      console.error('Error:', e);
+      document.getElementById('loading').classList.remove('active');
+    }
+  }
+
+  function setHero(pelicula) {
+    peliculaHero = pelicula;
+    document.getElementById('hero-bg').style.backgroundImage = `url('${pelicula.imagen}')`;
+    document.getElementById('hero-titulo').textContent = pelicula.titulo;
+    document.getElementById('hero-rating').textContent = `★ ${parseFloat(pelicula.calificacion || 0).toFixed(1)}`;
+    document.getElementById('hero-año').textContent = pelicula.año || '';
+    document.getElementById('hero-genero').textContent = pelicula.genero || '';
+    document.getElementById('hero-desc').textContent = pelicula.descripcion || '';
+  }
+
+  document.getElementById('hero-play').addEventListener('click', () => {
+    if (peliculaHero) abrirModal(peliculaHero, true);
+  });
+
+  document.getElementById('hero-info').addEventListener('click', () => {
+    if (peliculaHero) abrirModal(peliculaHero, false);
+  });
+
+  function renderCatalogo(peliculas) {
+    const grid = document.getElementById('grid');
+    const empty = document.getElementById('empty');
+    grid.innerHTML = '';
+
+    if (peliculas.length === 0) {
+      empty.classList.add('active');
+      return;
+    }
+
+    empty.classList.remove('active');
+
+    peliculas.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="${p.imagen}" alt="${p.titulo}" loading="lazy"
+          onerror="this.src='https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen'"/>
+        <div class="card-info">
+          <div class="card-titulo">${p.titulo}</div>
+          <div class="card-meta">
+            <span>${p.año || ''}</span>
+            <span class="card-genero">${(p.genero || '').split(',')[0]}</span>
+          </div>
+        </div>
+      `;
+      card.addEventListener('click', () => abrirModal(p, false));
+      grid.appendChild(card);
+    });
+  }
+
+  function abrirModal(pelicula, autoplay) {
+    document.getElementById('modal-backdrop').src = pelicula.imagen;
+    document.getElementById('modal-titulo').textContent = pelicula.titulo;
+    document.getElementById('modal-rating').textContent = `★ ${parseFloat(pelicula.calificacion || 0).toFixed(1)}`;
+    document.getElementById('modal-año').textContent = pelicula.año || '';
+    document.getElementById('modal-genero').textContent = pelicula.genero || '';
+    document.getElementById('modal-desc').textContent = pelicula.descripcion || 'Sin descripción disponible.';
+
+    const btns = document.getElementById('servidores-btns');
+    btns.innerHTML = '';
+
+    const player = document.getElementById('player-container');
+    const iframe = document.getElementById('player-iframe');
+    player.classList.remove('active');
+    iframe.src = '';
+
+    const servidores = pelicula.servidores || [];
+
+    if (servidores.length === 0) {
+      btns.innerHTML = '<p style="color: var(--muted); font-size: 13px;">Sin servidores disponibles.</p>';
+    } else {
+      servidores.forEach((s, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'servidor-btn';
+        btn.textContent = s.nombre || `Servidor ${i+1}`;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.servidor-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          cargarServidor(s.url);
+        });
+        btns.appendChild(btn);
+      });
+
+      if (autoplay && servidores.length > 0) {
+        btns.querySelector('.servidor-btn').classList.add('active');
+        cargarServidor(servidores[0].url);
+      }
+    }
+
+    document.getElementById('modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cargarServidor(url) {
+    const player = document.getElementById('player-container');
+    const iframe = document.getElementById('player-iframe');
+    iframe.src = url;
+    player.classList.add('active');
+    player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+    document.getElementById('player-iframe').src = '';
+    document.getElementById('player-container').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', cerrarModal);
+  document.getElementById('modal-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('modal-overlay')) cerrarModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarModal();
+  });
+
+  let searchTimeout;
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) { renderCatalogo(todasLasPeliculas); return; }
+      const filtradas = todasLasPeliculas.filter(p =>
+        p.titulo.toLowerCase().includes(q) ||
+        (p.genero || '').toLowerCase().includes(q)
+      );
+      renderCatalogo(filtradas);
+    }, 300);
+  });
+
+  cargarPeliculas();
+</script>
+</body>
+</html>
