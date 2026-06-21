@@ -7,549 +7,89 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-
     :root {
-      --bg: #0a0a0f;
-      --surface: #13131a;
-      --card: #1a1a24;
-      --accent: #e50914;
-      --accent2: #ff6b6b;
-      --text: #ffffff;
-      --muted: #8888a0;
-      --border: #2a2a3a;
+      --bg: #0a0a0f; --surface: #13131a; --card: #1a1a24;
+      --accent: #e50914; --accent2: #ff6b6b; --text: #ffffff;
+      --muted: #8888a0; --border: #2a2a3a;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-    }
-
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      background: linear-gradient(to bottom, rgba(10,10,15,0.98), transparent);
-      backdrop-filter: blur(8px);
-    }
-
-    .logo {
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      color: var(--accent);
-      text-transform: uppercase;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 16px;
-      width: 280px;
-    }
-
-    .search-box input {
-      background: none;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-size: 14px;
-      width: 100%;
-      font-family: 'Inter', sans-serif;
-    }
-
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: linear-gradient(to bottom, rgba(10,10,15,0.98), transparent); backdrop-filter: blur(8px); }
+    .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: var(--accent); text-transform: uppercase; }
+    .search-box { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; width: 280px; }
+    .search-box input { background: none; border: none; outline: none; color: var(--text); font-size: 14px; width: 100%; font-family: 'Inter', sans-serif; }
     .search-box input::placeholder { color: var(--muted); }
-
-    #hero {
-      position: relative;
-      height: 70vh;
-      min-height: 500px;
-      display: flex;
-      align-items: flex-end;
-      padding: 60px 40px;
-      overflow: hidden;
-    }
-
-    #hero-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center top;
-    }
-
-    #hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, var(--bg) 0%, rgba(10,10,15,0.7) 40%, rgba(10,10,15,0.2) 100%);
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 600px;
-    }
-
-    .hero-badge {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 4px;
-      margin-bottom: 16px;
-    }
-
-    .hero-title {
-      font-size: clamp(28px, 5vw, 52px);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 12px;
-      letter-spacing: -1px;
-    }
-
-    .hero-meta {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
+    #hero { position: relative; height: 70vh; min-height: 500px; display: flex; align-items: flex-end; padding: 60px 40px; overflow: hidden; }
+    #hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; }
+    #hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(10,10,15,0.7) 40%, rgba(10,10,15,0.2) 100%); }
+    .hero-content { position: relative; z-index: 2; max-width: 600px; }
+    .hero-badge { display: inline-block; background: var(--accent); color: white; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 12px; border-radius: 4px; margin-bottom: 16px; }
+    .hero-title { font-size: clamp(28px, 5vw, 52px); font-weight: 900; line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px; }
+    .hero-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; font-size: 13px; color: var(--muted); }
     .rating { color: #ffd700 !important; font-weight: 700; }
-
-    .hero-desc {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #ccc;
-      margin-bottom: 24px;
-      max-width: 500px;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
+    .hero-desc { font-size: 14px; line-height: 1.7; color: #ccc; margin-bottom: 24px; max-width: 500px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .hero-buttons { display: flex; gap: 12px; }
-
-    .btn-play {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-
+    .btn-play { display: flex; align-items: center; gap: 8px; background: var(--accent); color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
     .btn-play:hover { background: #c40812; transform: scale(1.02); }
-
-    .btn-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-      backdrop-filter: blur(4px);
-    }
-
+    .btn-info { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; backdrop-filter: blur(4px); }
     .btn-info:hover { background: rgba(255,255,255,0.25); }
-
-    /* TABS */
-    #tabs-container {
-      padding: 0 40px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tab {
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--muted);
-      border: none;
-      background: none;
-      font-family: 'Inter', sans-serif;
-      transition: all 0.2s;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-    }
-
+    #tabs-container { padding: 0 40px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+    .tab { padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted); border: none; background: none; font-family: 'Inter', sans-serif; transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
     .tab.proximamente { opacity: 0.4; cursor: not-allowed; }
-
     #catalogo { padding: 20px 40px 60px; }
-
-    .seccion-titulo {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .seccion-titulo::before {
-      content: '';
-      display: block;
-      width: 4px;
-      height: 20px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      cursor: pointer;
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--card);
-      border: 1px solid var(--border);
-      transition: all 0.25s;
-    }
-
-    .card:hover, .card.tv-focused {
-      transform: translateY(-6px) scale(1.02);
-      border-color: var(--accent);
-      box-shadow: 0 12px 32px rgba(229,9,20,0.25);
-    }
-
-    .card img {
-      width: 100%;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      display: block;
-    }
-
+    .seccion-titulo { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .seccion-titulo::before { content: ''; display: block; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+    .card { cursor: pointer; border-radius: 10px; overflow: hidden; background: var(--card); border: 1px solid var(--border); transition: all 0.25s; }
+    .card:hover, .card.tv-focused { transform: translateY(-6px) scale(1.02); border-color: var(--accent); box-shadow: 0 12px 32px rgba(229,9,20,0.25); }
+    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
     .card-info { padding: 10px 12px; }
-
-    .card-titulo {
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 4px;
-    }
-
-    .card-meta {
-      font-size: 11px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-    }
-
+    .card-titulo { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+    .card-meta { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
     .card-genero { font-size: 10px; color: var(--accent2); font-weight: 600; }
-
-    #modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(6px);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
+    #modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px; }
     #modal-overlay.active { display: flex; }
-
-    #modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
-      overflow-y: auto;
-      position: relative;
-    }
-
-    #modal-close {
-      position: absolute;
-      top: 16px; right: 16px;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: white;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
+    #modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative; }
+    #modal-close { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
     #modal-close:hover { background: var(--accent); }
-
-    #modal-header {
-      position: relative;
-      height: 280px;
-      overflow: hidden;
-      border-radius: 16px 16px 0 0;
-    }
-
-    #modal-backdrop {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;
-    }
-
-    #modal-header::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, var(--surface) 0%, transparent 60%);
-    }
-
+    #modal-header { position: relative; height: 280px; overflow: hidden; border-radius: 16px 16px 0 0; }
+    #modal-backdrop { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+    #modal-header::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--surface) 0%, transparent 60%); }
     #modal-body { padding: 24px 28px 28px; }
-
-    #modal-titulo {
-      font-size: 28px;
-      font-weight: 900;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    #modal-meta {
-      display: flex;
-      gap: 14px;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-
-    #modal-genero {
-      display: inline-block;
-      background: rgba(229,9,20,0.15);
-      color: var(--accent2);
-      border: 1px solid rgba(229,9,20,0.3);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 14px;
-    }
-
-    #modal-desc {
-      font-size: 14px;
-      line-height: 1.8;
-      color: #bbb;
-      margin-bottom: 24px;
-    }
-
-    .servidores-titulo {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    #servidores-btns {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .servidor-btn {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-      text-transform: capitalize;
-    }
-
-    .servidor-btn:hover, .servidor-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    /* PLAYER */
-    #player-container {
-      display: none;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #000;
-      position: relative;
-    }
-
+    #modal-titulo { font-size: 28px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; }
+    #modal-meta { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px; flex-wrap: wrap; }
+    #modal-genero { display: inline-block; background: rgba(229,9,20,0.15); color: var(--accent2); border: 1px solid rgba(229,9,20,0.3); padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
+    #modal-desc { font-size: 14px; line-height: 1.8; color: #bbb; margin-bottom: 24px; }
+    .servidores-titulo { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    #servidores-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .servidor-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; text-transform: capitalize; }
+    .servidor-btn:hover, .servidor-btn.active { background: var(--accent); border-color: var(--accent); }
+    #player-container { display: none; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
     #player-container.active { display: block; }
-
-    #player-spinner {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      aspect-ratio: 16/9;
-      background: #000;
-    }
-
+    #player-spinner { display: none; align-items: center; justify-content: center; aspect-ratio: 16/9; background: #000; }
     #player-spinner.active { display: flex; }
-
-    #player-iframe {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border: none;
-      display: block;
-    }
-
-    /* BARRA DE CONTROLES DEL PLAYER */
-    #player-barra {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 10px 14px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
-      transition: opacity 0.4s ease;
-      opacity: 1;
-      z-index: 20;
-      gap: 8px;
-    }
-
+    #player-iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+    #player-barra { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; padding: 10px 14px; background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent); transition: opacity 0.4s ease; opacity: 1; z-index: 20; gap: 8px; }
     #player-barra.oculta { opacity: 0; pointer-events: none; }
-
-    /* Flecha para mostrar barra cuando está oculta */
-    #player-barra-trigger {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 48px;
-      z-index: 19;
-      cursor: pointer;
-    }
-
-    .player-btn {
-      background: rgba(0,0,0,0.65);
-      border: none;
-      color: white;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.15s;
-      font-family: 'Inter', sans-serif;
-      backdrop-filter: blur(4px);
-      flex-shrink: 0;
-    }
-
-    .player-btn:hover, .player-btn.tv-focused {
-      background: var(--accent);
-      transform: scale(1.1);
-    }
-
-    /* En móvil botones más grandes */
-    @media (max-width: 600px) {
-      .player-btn { width: 44px; height: 44px; font-size: 18px; }
-      #player-barra { padding: 8px 10px; }
-    }
-
-    /* LOADING */
-    #loading {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      background: var(--bg);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 20px;
-    }
-
+    #player-barra-trigger { position: absolute; top: 0; left: 0; right: 0; height: 48px; z-index: 19; cursor: pointer; }
+    .player-btn { background: rgba(0,0,0,0.65); border: none; color: white; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.15s; font-family: 'Inter', sans-serif; backdrop-filter: blur(4px); flex-shrink: 0; }
+    .player-btn:hover { background: var(--accent); transform: scale(1.1); }
+    #loading { display: none; position: fixed; inset: 0; z-index: 300; background: var(--bg); align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
     #loading.active { display: flex; }
-
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    .spinner-small {
-      width: 32px;
-      height: 32px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner-small { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     #empty { display: none; text-align: center; padding: 80px 20px; color: var(--muted); }
     #empty.active { display: block; }
     #empty h3 { font-size: 22px; margin-bottom: 8px; color: var(--text); }
-
     #proximamente { display: none; text-align: center; padding: 100px 20px; color: var(--muted); }
     #proximamente.active { display: block; }
     #proximamente h3 { font-size: 28px; margin-bottom: 12px; color: var(--text); }
-
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
     @media (max-width: 600px) {
       nav { padding: 12px 16px; }
       #hero { padding: 40px 16px; }
@@ -559,8 +99,8 @@
       .search-box { width: 180px; }
       #modal-body { padding: 16px; }
       .tab { padding: 8px 12px; font-size: 13px; }
+      .player-btn { width: 44px; height: 44px; font-size: 18px; }
     }
-
     @media (min-width: 1400px) {
       nav { padding: 20px 60px; }
       #hero { padding: 80px 60px; }
@@ -613,14 +153,8 @@
 <div id="catalogo">
   <div class="seccion-titulo" id="seccion-titulo">Todas las películas</div>
   <div class="grid" id="grid"></div>
-  <div id="empty">
-    <h3>Sin resultados</h3>
-    <p>No encontramos películas con ese nombre.</p>
-  </div>
-  <div id="proximamente">
-    <h3>📺 Series</h3>
-    <p>Próximamente disponible...</p>
-  </div>
+  <div id="empty"><h3>Sin resultados</h3><p>No encontramos películas con ese nombre.</p></div>
+  <div id="proximamente"><h3>📺 Series</h3><p>Próximamente disponible...</p></div>
 </div>
 
 <div id="loading" class="active">
@@ -631,9 +165,7 @@
 <div id="modal-overlay">
   <div id="modal">
     <button id="modal-close">✕</button>
-    <div id="modal-header">
-      <img id="modal-backdrop" src="" alt=""/>
-    </div>
+    <div id="modal-header"><img id="modal-backdrop" src="" alt=""/></div>
     <div id="modal-body">
       <h2 id="modal-titulo"></h2>
       <div id="modal-meta">
@@ -645,11 +177,8 @@
       <div class="servidores-titulo">Seleccioná un servidor</div>
       <div id="servidores-btns"></div>
       <div id="player-container">
-        <div id="player-spinner">
-          <div class="spinner-small"></div>
-        </div>
+        <div id="player-spinner"><div class="spinner-small"></div></div>
         <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-        <!-- BARRA DE CONTROLES PROPIA -->
         <div id="player-barra-trigger"></div>
         <div id="player-barra">
           <button class="player-btn" id="btn-fullscreen" title="Pantalla completa">⛶</button>
@@ -671,11 +200,6 @@
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
 
   window.open = function() { return null; };
-
-  window.addEventListener('beforeunload', function(e) {
-    e.preventDefault();
-    e.returnValue = '';
-  });
 
   document.addEventListener('click', function(e) {
     var a = e.target.closest('a');
@@ -716,7 +240,7 @@
   var servidorFocusIndex = 0;
   var barraTimeout = null;
   var barraVisible = true;
-  var esPantallasCompleta = false;
+  var esPantallaCompleta = false;
 
   function formatRating(cal) {
     var n = parseFloat(cal);
@@ -726,10 +250,7 @@
 
   function cargarPeliculas() {
     fetch(SUPABASE_URL + '/rest/v1/peliculas?select=*&order=id.desc', {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY
-      }
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
     })
     .then(function(res) { return res.json(); })
     .then(function(data) {
@@ -762,7 +283,6 @@
     if (peliculaHero) abrirModal(peliculaHero, false);
   });
 
-  // TABS
   var tabs = document.querySelectorAll('.tab');
   var mapaGeneros = {
     'accion': ['acción', 'accion'],
@@ -775,7 +295,6 @@
   tabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
       var tipo = tab.dataset.tab;
-
       if (tipo === 'series') {
         tabs.forEach(function(t) { t.classList.remove('active'); });
         tab.classList.add('active');
@@ -786,7 +305,6 @@
         document.getElementById('seccion-titulo').textContent = 'Series';
         return;
       }
-
       tabs.forEach(function(t) { t.classList.remove('active'); });
       tab.classList.add('active');
       tabActual = tipo;
@@ -798,14 +316,12 @@
 
   function filtrarYRender(query) {
     var peliculas = todasLasPeliculas.slice();
-
     if (query) {
       peliculas = peliculas.filter(function(p) {
         return p.titulo.toLowerCase().indexOf(query) !== -1 ||
                (p.genero || '').toLowerCase().indexOf(query) !== -1;
       });
     }
-
     if (tabActual !== 'todas') {
       var generosTab = mapaGeneros[tabActual] || [];
       peliculas = peliculas.filter(function(p) {
@@ -813,7 +329,6 @@
         return generosTab.some(function(g) { return genero.indexOf(g) !== -1; });
       });
     }
-
     var tituloSeccion = 'Todas las películas';
     if (query) {
       tituloSeccion = 'Resultados para "' + query + '"';
@@ -822,7 +337,6 @@
       tabs.forEach(function(t) { if (t.dataset.tab === tabActual) tabEl = t; });
       if (tabEl) tituloSeccion = tabEl.textContent;
     }
-
     document.getElementById('seccion-titulo').textContent = tituloSeccion;
     renderCatalogo(peliculas);
   }
@@ -832,14 +346,8 @@
     var empty = document.getElementById('empty');
     grid.innerHTML = '';
     tvFocusIndex = 0;
-
-    if (peliculas.length === 0) {
-      empty.classList.add('active');
-      return;
-    }
-
+    if (peliculas.length === 0) { empty.classList.add('active'); return; }
     empty.classList.remove('active');
-
     peliculas.forEach(function(p, i) {
       var card = document.createElement('div');
       card.className = 'card';
@@ -847,13 +355,9 @@
       card.dataset.index = i;
       card.innerHTML =
         '<img src="' + p.imagen + '" alt="' + p.titulo + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen\'"/>' +
-        '<div class="card-info">' +
-          '<div class="card-titulo">' + p.titulo + '</div>' +
-          '<div class="card-meta">' +
-            '<span>' + (p.año || '') + '</span>' +
-            '<span class="card-genero">' + ((p.genero || '').split(',')[0]) + '</span>' +
-          '</div>' +
-        '</div>';
+        '<div class="card-info"><div class="card-titulo">' + p.titulo + '</div>' +
+        '<div class="card-meta"><span>' + (p.año || '') + '</span>' +
+        '<span class="card-genero">' + ((p.genero || '').split(',')[0]) + '</span></div></div>';
       card.addEventListener('click', function() { abrirModal(p, false); });
       grid.appendChild(card);
     });
@@ -862,25 +366,20 @@
   function abrirModal(pelicula, autoplay) {
     modalAbierto = true;
     servidorFocusIndex = 0;
-
     document.getElementById('modal-backdrop').src = pelicula.imagen;
     document.getElementById('modal-titulo').textContent = pelicula.titulo;
     document.getElementById('modal-rating').textContent = formatRating(pelicula.calificacion);
     document.getElementById('modal-año').textContent = pelicula.año || '';
     document.getElementById('modal-genero').textContent = pelicula.genero || '';
     document.getElementById('modal-desc').textContent = pelicula.descripcion || 'Sin descripción disponible.';
-
     var btns = document.getElementById('servidores-btns');
     btns.innerHTML = '';
-
     var player = document.getElementById('player-container');
     var iframe = document.getElementById('player-iframe');
-    var barra = document.getElementById('player-barra');
     player.classList.remove('active');
     iframe.src = '';
-    barra.classList.remove('oculta');
     document.getElementById('player-spinner').classList.remove('active');
-
+    document.getElementById('player-barra').classList.remove('oculta');
     var orden = ['streamwish', 'vidhide', 'filemoon', 'varios', 'doodstream'];
     var servidores = (pelicula.servidores || []).slice().sort(function(a, b) {
       var ia = -1, ib = -1;
@@ -890,7 +389,6 @@
       });
       return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
     });
-
     if (servidores.length === 0) {
       btns.innerHTML = '<p style="color: var(--muted); font-size: 13px;">Sin servidores disponibles.</p>';
     } else {
@@ -905,13 +403,11 @@
         });
         btns.appendChild(btn);
       });
-
       if (autoplay && servidores.length > 0) {
         btns.querySelectorAll('.servidor-btn')[0].classList.add('active');
         cargarServidor(servidores[0].url);
       }
     }
-
     document.getElementById('modal-overlay').classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -920,42 +416,34 @@
     var player = document.getElementById('player-container');
     var iframe = document.getElementById('player-iframe');
     var spinner = document.getElementById('player-spinner');
-    var barra = document.getElementById('player-barra');
-
     iframe.src = '';
-    barra.classList.remove('oculta');
-
     player.classList.add('active');
     spinner.classList.add('active');
     player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
     setTimeout(function() {
       spinner.classList.remove('active');
       iframe.src = url;
-      iniciarAutoOcultarBarra();
+      mostrarBarra();
     }, 400);
   }
 
-  // ===== BARRA DE CONTROLES =====
-
+  // BARRA DE CONTROLES
   function mostrarBarra() {
     var barra = document.getElementById('player-barra');
     barra.classList.remove('oculta');
     barraVisible = true;
     if (barraTimeout) clearTimeout(barraTimeout);
     barraTimeout = setTimeout(function() {
-      ocultarBarra();
+      barra.classList.add('oculta');
+      barraVisible = false;
     }, 3000);
   }
 
   function ocultarBarra() {
+    if (barraTimeout) clearTimeout(barraTimeout);
     var barra = document.getElementById('player-barra');
     barra.classList.add('oculta');
     barraVisible = false;
-  }
-
-  function iniciarAutoOcultarBarra() {
-    mostrarBarra();
   }
 
   // Mouse — PC
@@ -963,22 +451,23 @@
     mostrarBarra();
   });
 
-  // Táctil — celular/tablet
-  document.getElementById('player-container').addEventListener('touchstart', function() {
-    if (barraVisible) {
-      ocultarBarra();
-    } else {
+  // Táctil — celular/tablet: toggle al tocar
+  document.getElementById('player-container').addEventListener('touchstart', function(e) {
+    var barra = document.getElementById('player-barra');
+    if (barra.classList.contains('oculta')) {
       mostrarBarra();
+    } else {
+      ocultarBarra();
     }
   });
 
-  // Trigger zona superior — para mostrar la barra al tocar arriba
+  // Zona superior siempre muestra la barra al tocar
   document.getElementById('player-barra-trigger').addEventListener('touchstart', function(e) {
     e.stopPropagation();
     mostrarBarra();
   });
 
-  // PANTALLA COMPLETA
+  // Pantalla completa
   document.getElementById('btn-fullscreen').addEventListener('click', function() {
     var player = document.getElementById('player-container');
     if (player.requestFullscreen) player.requestFullscreen();
@@ -994,19 +483,11 @@
     mostrarBarra();
   });
 
-  // Detectar cambio de pantalla completa para mostrar/ocultar botones
   function onFullscreenChange() {
-    var btnFS = document.getElementById('btn-fullscreen');
-    var btnExit = document.getElementById('btn-exit-fs');
     var esFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
-    esPantallasCompleta = esFull;
-    if (esFull) {
-      btnFS.style.display = 'none';
-      btnExit.style.display = 'flex';
-    } else {
-      btnFS.style.display = 'flex';
-      btnExit.style.display = 'none';
-    }
+    esPantallaCompleta = esFull;
+    document.getElementById('btn-fullscreen').style.display = esFull ? 'none' : 'flex';
+    document.getElementById('btn-exit-fs').style.display = esFull ? 'flex' : 'none';
     mostrarBarra();
   }
 
@@ -1016,7 +497,6 @@
 
   function cerrarModal() {
     modalAbierto = false;
-    // Salir de pantalla completa si está activa
     if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
       if (document.exitFullscreen) document.exitFullscreen();
       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
@@ -1031,12 +511,9 @@
     document.body.style.overflow = '';
   }
 
+  // Solo la X cierra el modal
   document.getElementById('modal-close').addEventListener('click', cerrarModal);
-  document.getElementById('modal-overlay').addEventListener('click', function(e) {
-    if (e.target === document.getElementById('modal-overlay')) cerrarModal();
-  });
 
-  // BUSQUEDA
   var searchTimeout;
   document.getElementById('search-input').addEventListener('input', function(e) {
     clearTimeout(searchTimeout);
@@ -1045,7 +522,7 @@
     }, 300);
   });
 
-  // NAVEGACION TV + TECLADO
+  // NAVEGACION TV
   var tvMode = false;
 
   function detectarTV() {
@@ -1054,9 +531,7 @@
     }
   }
 
-  function getCards() {
-    return document.querySelectorAll('.card');
-  }
+  function getCards() { return document.querySelectorAll('.card'); }
 
   function enfocarCard(index) {
     var cards = getCards();
@@ -1078,9 +553,8 @@
   }
 
   document.addEventListener('keydown', function(e) {
-    // Escape — cerrar modal o salir de pantalla completa
     if (e.key === 'Escape') {
-      if (esPantallasCompleta) {
+      if (esPantallaCompleta) {
         if (document.exitFullscreen) document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
       } else {
@@ -1090,30 +564,26 @@
     }
 
     if (modalAbierto) {
-      // Flecha arriba — mostrar barra del player
-      if (e.key === 'ArrowUp' && esPantallasCompleta) {
-        e.preventDefault();
-        mostrarBarra();
-        return;
-      }
+      var player = document.getElementById('player-container');
+      if (player.classList.contains('active')) mostrarBarra();
 
       var btns = document.querySelectorAll('.servidor-btn');
       var btnsArr = [];
       btns.forEach(function(b) { btnsArr.push(b); });
 
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowLeft' && !esPantallaCompleta) {
         e.preventDefault();
         servidorFocusIndex = Math.max(servidorFocusIndex - 1, 0);
         btnsArr.forEach(function(b) { b.classList.remove('active'); });
         if (btnsArr[servidorFocusIndex]) btnsArr[servidorFocusIndex].classList.add('active');
       }
-      if (e.key === 'ArrowRight') {
+      if (e.key === 'ArrowRight' && !esPantallaCompleta) {
         e.preventDefault();
         servidorFocusIndex = Math.min(servidorFocusIndex + 1, btnsArr.length - 1);
         btnsArr.forEach(function(b) { b.classList.remove('active'); });
         if (btnsArr[servidorFocusIndex]) btnsArr[servidorFocusIndex].classList.add('active');
       }
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !esPantallaCompleta) {
         e.preventDefault();
         if (btnsArr[servidorFocusIndex]) btnsArr[servidorFocusIndex].click();
       }
@@ -1121,37 +591,19 @@
         e.preventDefault();
         cerrarModal();
       }
-
-      // Cualquier tecla muestra la barra si hay video
-      var player = document.getElementById('player-container');
-      if (player.classList.contains('active')) {
-        mostrarBarra();
-      }
       return;
     }
 
     if (!tvMode) return;
-
     var cards = getCards();
     if (!cards.length) return;
     var cols = getColumnas();
 
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      enfocarCard(Math.min(tvFocusIndex + 1, cards.length - 1));
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      enfocarCard(Math.max(tvFocusIndex - 1, 0));
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      enfocarCard(Math.min(tvFocusIndex + cols, cards.length - 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      enfocarCard(Math.max(tvFocusIndex - cols, 0));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (cards[tvFocusIndex]) cards[tvFocusIndex].click();
-    }
+    if (e.key === 'ArrowRight') { e.preventDefault(); enfocarCard(Math.min(tvFocusIndex + 1, cards.length - 1)); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); enfocarCard(Math.max(tvFocusIndex - 1, 0)); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); enfocarCard(Math.min(tvFocusIndex + cols, cards.length - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); enfocarCard(Math.max(tvFocusIndex - cols, 0)); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (cards[tvFocusIndex]) cards[tvFocusIndex].click(); }
   });
 
   detectarTV();
