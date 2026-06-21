@@ -416,6 +416,7 @@
       border-color: var(--accent);
     }
 
+    /* PLAYER */
     #player-container {
       display: none;
       border-radius: 12px;
@@ -443,27 +444,66 @@
       display: block;
     }
 
-    #btn-fullscreen {
-      display: none;
+    /* BARRA DE CONTROLES DEL PLAYER */
+    #player-barra {
       position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.2s;
-      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 10px 14px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
+      transition: opacity 0.4s ease;
+      opacity: 1;
+      z-index: 20;
+      gap: 8px;
     }
 
-    #btn-fullscreen:hover { background: var(--accent); }
-    #btn-fullscreen.visible { display: block; }
+    #player-barra.oculta { opacity: 0; pointer-events: none; }
 
+    /* Flecha para mostrar barra cuando está oculta */
+    #player-barra-trigger {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      z-index: 19;
+      cursor: pointer;
+    }
+
+    .player-btn {
+      background: rgba(0,0,0,0.65);
+      border: none;
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      font-family: 'Inter', sans-serif;
+      backdrop-filter: blur(4px);
+      flex-shrink: 0;
+    }
+
+    .player-btn:hover, .player-btn.tv-focused {
+      background: var(--accent);
+      transform: scale(1.1);
+    }
+
+    /* En móvil botones más grandes */
+    @media (max-width: 600px) {
+      .player-btn { width: 44px; height: 44px; font-size: 18px; }
+      #player-barra { padding: 8px 10px; }
+    }
+
+    /* LOADING */
     #loading {
       display: none;
       position: fixed;
@@ -609,7 +649,12 @@
           <div class="spinner-small"></div>
         </div>
         <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-        <button id="btn-fullscreen">⛶ Pantalla completa</button>
+        <!-- BARRA DE CONTROLES PROPIA -->
+        <div id="player-barra-trigger"></div>
+        <div id="player-barra">
+          <button class="player-btn" id="btn-fullscreen" title="Pantalla completa">⛶</button>
+          <button class="player-btn" id="btn-exit-fs" title="Salir pantalla completa" style="display:none;">✕</button>
+        </div>
       </div>
     </div>
   </div>
@@ -625,7 +670,6 @@
   var SUPABASE_URL = "https://uqsachuontvqomhnybxs.supabase.co";
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
 
-  // Bloquear popups
   window.open = function() { return null; };
 
   window.addEventListener('beforeunload', function(e) {
@@ -670,6 +714,9 @@
   var tvFocusIndex = 0;
   var modalAbierto = false;
   var servidorFocusIndex = 0;
+  var barraTimeout = null;
+  var barraVisible = true;
+  var esPantallasCompleta = false;
 
   function formatRating(cal) {
     var n = parseFloat(cal);
@@ -828,10 +875,10 @@
 
     var player = document.getElementById('player-container');
     var iframe = document.getElementById('player-iframe');
-    var btnFS = document.getElementById('btn-fullscreen');
+    var barra = document.getElementById('player-barra');
     player.classList.remove('active');
     iframe.src = '';
-    btnFS.classList.remove('visible');
+    barra.classList.remove('oculta');
     document.getElementById('player-spinner').classList.remove('active');
 
     var orden = ['streamwish', 'vidhide', 'filemoon', 'varios', 'doodstream'];
@@ -873,45 +920,114 @@
     var player = document.getElementById('player-container');
     var iframe = document.getElementById('player-iframe');
     var spinner = document.getElementById('player-spinner');
-    var btnFS = document.getElementById('btn-fullscreen');
+    var barra = document.getElementById('player-barra');
 
-    // Limpiar
     iframe.src = '';
-    btnFS.classList.remove('visible');
+    barra.classList.remove('oculta');
 
-    // Mostrar spinner
     player.classList.add('active');
     spinner.classList.add('active');
     player.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    // Cargar con delay
     setTimeout(function() {
       spinner.classList.remove('active');
       iframe.src = url;
-
-      // Mostrar boton fullscreen
-      setTimeout(function() {
-        btnFS.classList.add('visible');
-      }, 1500);
+      iniciarAutoOcultarBarra();
     }, 400);
   }
 
-  document.getElementById('btn-fullscreen').addEventListener('click', function() {
-    var iframe = document.getElementById('player-iframe');
-    if (!iframe) return;
-    if (iframe.requestFullscreen) iframe.requestFullscreen();
-    else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
-    else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+  // ===== BARRA DE CONTROLES =====
+
+  function mostrarBarra() {
+    var barra = document.getElementById('player-barra');
+    barra.classList.remove('oculta');
+    barraVisible = true;
+    if (barraTimeout) clearTimeout(barraTimeout);
+    barraTimeout = setTimeout(function() {
+      ocultarBarra();
+    }, 3000);
+  }
+
+  function ocultarBarra() {
+    var barra = document.getElementById('player-barra');
+    barra.classList.add('oculta');
+    barraVisible = false;
+  }
+
+  function iniciarAutoOcultarBarra() {
+    mostrarBarra();
+  }
+
+  // Mouse — PC
+  document.getElementById('player-container').addEventListener('mousemove', function() {
+    mostrarBarra();
   });
+
+  // Táctil — celular/tablet
+  document.getElementById('player-container').addEventListener('touchstart', function() {
+    if (barraVisible) {
+      ocultarBarra();
+    } else {
+      mostrarBarra();
+    }
+  });
+
+  // Trigger zona superior — para mostrar la barra al tocar arriba
+  document.getElementById('player-barra-trigger').addEventListener('touchstart', function(e) {
+    e.stopPropagation();
+    mostrarBarra();
+  });
+
+  // PANTALLA COMPLETA
+  document.getElementById('btn-fullscreen').addEventListener('click', function() {
+    var player = document.getElementById('player-container');
+    if (player.requestFullscreen) player.requestFullscreen();
+    else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+    else if (player.mozRequestFullScreen) player.mozRequestFullScreen();
+    mostrarBarra();
+  });
+
+  document.getElementById('btn-exit-fs').addEventListener('click', function() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+    mostrarBarra();
+  });
+
+  // Detectar cambio de pantalla completa para mostrar/ocultar botones
+  function onFullscreenChange() {
+    var btnFS = document.getElementById('btn-fullscreen');
+    var btnExit = document.getElementById('btn-exit-fs');
+    var esFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+    esPantallasCompleta = esFull;
+    if (esFull) {
+      btnFS.style.display = 'none';
+      btnExit.style.display = 'flex';
+    } else {
+      btnFS.style.display = 'flex';
+      btnExit.style.display = 'none';
+    }
+    mostrarBarra();
+  }
+
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+  document.addEventListener('mozfullscreenchange', onFullscreenChange);
 
   function cerrarModal() {
     modalAbierto = false;
+    // Salir de pantalla completa si está activa
+    if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+    }
+    if (barraTimeout) clearTimeout(barraTimeout);
     document.getElementById('modal-overlay').classList.remove('active');
-    var iframe = document.getElementById('player-iframe');
-    iframe.src = '';
+    document.getElementById('player-iframe').src = '';
     document.getElementById('player-container').classList.remove('active');
-    document.getElementById('btn-fullscreen').classList.remove('visible');
     document.getElementById('player-spinner').classList.remove('active');
+    document.getElementById('player-barra').classList.remove('oculta');
     document.body.style.overflow = '';
   }
 
@@ -929,7 +1045,7 @@
     }, 300);
   });
 
-  // NAVEGACION TV
+  // NAVEGACION TV + TECLADO
   var tvMode = false;
 
   function detectarTV() {
@@ -962,12 +1078,25 @@
   }
 
   document.addEventListener('keydown', function(e) {
+    // Escape — cerrar modal o salir de pantalla completa
     if (e.key === 'Escape') {
-      cerrarModal();
+      if (esPantallasCompleta) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      } else {
+        cerrarModal();
+      }
       return;
     }
 
     if (modalAbierto) {
+      // Flecha arriba — mostrar barra del player
+      if (e.key === 'ArrowUp' && esPantallasCompleta) {
+        e.preventDefault();
+        mostrarBarra();
+        return;
+      }
+
       var btns = document.querySelectorAll('.servidor-btn');
       var btnsArr = [];
       btns.forEach(function(b) { btnsArr.push(b); });
@@ -991,6 +1120,12 @@
       if (e.key === 'Backspace') {
         e.preventDefault();
         cerrarModal();
+      }
+
+      // Cualquier tecla muestra la barra si hay video
+      var player = document.getElementById('player-container');
+      if (player.classList.contains('active')) {
+        mostrarBarra();
       }
       return;
     }
