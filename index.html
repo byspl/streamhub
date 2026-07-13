@@ -148,9 +148,57 @@
     #login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     #login-error { color: var(--accent2); font-size: 13px; text-align: center; margin-top: 14px; min-height: 18px; }
     /* Botón cerrar sesión en nav */
-    #logout-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-left: 12px; white-space: nowrap; }
-    #logout-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+    #logout-btn, #logout-cuenta-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-left: 12px; white-space: nowrap; }
+    #logout-btn:hover, #logout-cuenta-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
     .nav-right { display: flex; align-items: center; }
+    /* PANTALLA DE PERFILES */
+    #perfiles-screen { display: none; position: fixed; inset: 0; z-index: 450; background: var(--bg); flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+    #perfiles-screen.active { display: flex; }
+    .perfiles-titulo { font-size: clamp(24px, 4vw, 40px); font-weight: 900; margin-bottom: 40px; text-align: center; letter-spacing: -1px; }
+    .perfiles-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; max-width: 800px; }
+    .perfil-item { display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.2s; width: 120px; }
+    .perfil-item:hover { transform: scale(1.05); }
+    .perfil-avatar { width: 110px; height: 110px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 52px; border: 3px solid transparent; transition: border 0.2s; position: relative; }
+    .perfil-item:hover .perfil-avatar { border-color: white; }
+    .perfil-nombre { font-size: 15px; font-weight: 600; color: var(--muted); transition: color 0.2s; }
+    .perfil-item:hover .perfil-nombre { color: var(--text); }
+    .perfil-lock { position: absolute; bottom: 6px; right: 6px; font-size: 16px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+    /* Agregar perfil */
+    .perfil-add .perfil-avatar { background: var(--card); border: 2px dashed var(--border); color: var(--muted); font-size: 44px; }
+    .perfil-item.perfil-add:hover .perfil-avatar { border-color: var(--accent); color: var(--accent); }
+    /* Botón administrar perfiles */
+    #perfiles-admin-btn { margin-top: 40px; background: none; border: 1px solid var(--border); color: var(--muted); padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+    #perfiles-admin-btn:hover { color: var(--text); border-color: var(--text); }
+    #perfiles-admin-btn.activo { color: var(--accent); border-color: var(--accent); }
+    /* Botón salir en pantalla de perfiles */
+    #perfiles-logout { position: absolute; top: 24px; right: 24px; background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    #perfiles-logout:hover { background: var(--accent); border-color: var(--accent); color: white; }
+    /* Botón borrar en modo admin */
+    .perfil-delete { position: absolute; top: -8px; right: -8px; background: var(--accent); color: white; border: 2px solid var(--bg); width: 28px; height: 28px; border-radius: 50%; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 3; }
+    .perfiles-screen-admin .perfil-avatar { opacity: 0.85; }
+    .perfiles-screen-admin .perfil-item:not(.perfil-add) .perfil-delete { display: flex; }
+    /* MODAL CREAR/EDITAR PERFIL */
+    #perfil-modal { display: none; position: fixed; inset: 0; z-index: 460; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px; }
+    #perfil-modal.active { display: flex; }
+    .perfil-modal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 420px; padding: 32px; max-height: 90vh; overflow-y: auto; }
+    .perfil-modal-titulo { font-size: 22px; font-weight: 900; margin-bottom: 24px; text-align: center; }
+    .pm-preview { display: flex; justify-content: center; margin-bottom: 24px; }
+    .pm-preview-avatar { width: 90px; height: 90px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+    .pm-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pm-input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; margin-bottom: 20px; }
+    .pm-input:focus { border-color: var(--accent); }
+    .pm-emojis { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .pm-emoji { width: 44px; height: 44px; border-radius: 8px; background: var(--card); border: 2px solid var(--border); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .pm-emoji.sel { border-color: var(--accent); background: rgba(229,9,20,0.15); }
+    .pm-colors { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .pm-color { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border 0.15s; }
+    .pm-color.sel { border-color: white; }
+    .pm-buttons { display: flex; gap: 10px; }
+    .pm-btn-save { flex: 1; background: var(--accent); color: white; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .pm-btn-save:hover { background: #c40812; }
+    .pm-btn-cancel { flex: 1; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .pm-btn-cancel:hover { background: var(--border); }
+    .pm-error { color: var(--accent2); font-size: 13px; text-align: center; margin-top: 12px; min-height: 16px; }
     @media (max-width: 600px) {
       nav { padding: 12px 16px; }
       #hero { padding: 40px 16px; }
@@ -163,7 +211,7 @@
       .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
       .search-box { width: 180px; }
       .login-card { padding: 32px 24px; }
-      #logout-btn { padding: 7px 12px; font-size: 12px; margin-left: 8px; }
+      #logout-btn, #logout-cuenta-btn { padding: 7px 10px; font-size: 11px; margin-left: 6px; }
       #modal-body { padding: 16px; }
       .tab { padding: 8px 12px; font-size: 13px; }
       .player-btn { width: 44px; height: 44px; font-size: 18px; }
@@ -200,6 +248,35 @@
   </div>
 </div>
 
+<!-- PANTALLA DE PERFILES -->
+<div id="perfiles-screen">
+  <button id="perfiles-logout">Salir</button>
+  <div class="perfiles-titulo">¿Quién está viendo?</div>
+  <div class="perfiles-grid" id="perfiles-grid"></div>
+  <button id="perfiles-admin-btn">✏️ Administrar perfiles</button>
+</div>
+
+<!-- MODAL CREAR / EDITAR PERFIL -->
+<div id="perfil-modal">
+  <div class="perfil-modal-card">
+    <div class="perfil-modal-titulo" id="pm-titulo">Nuevo perfil</div>
+    <div class="pm-preview">
+      <div class="pm-preview-avatar" id="pm-preview-avatar">🎬</div>
+    </div>
+    <div class="pm-label">Nombre</div>
+    <input type="text" class="pm-input" id="pm-nombre" placeholder="Ej: Papá" maxlength="20"/>
+    <div class="pm-label">Elegí un ícono</div>
+    <div class="pm-emojis" id="pm-emojis"></div>
+    <div class="pm-label">Color</div>
+    <div class="pm-colors" id="pm-colors"></div>
+    <div class="pm-buttons">
+      <button class="pm-btn-cancel" id="pm-cancel">Cancelar</button>
+      <button class="pm-btn-save" id="pm-save">Guardar</button>
+    </div>
+    <div class="pm-error" id="pm-error"></div>
+  </div>
+</div>
+
 <nav>
   <div class="logo">🎬 StreamHub</div>
   <div class="nav-right">
@@ -209,7 +286,8 @@
       </svg>
       <input type="text" id="search-input" placeholder="Buscar..."/>
     </div>
-    <button id="logout-btn" title="Cerrar sesión">Salir</button>
+    <button id="logout-btn" title="Cambiar perfil">Cambiar perfil</button>
+    <button id="logout-cuenta-btn" title="Cerrar sesión">Salir</button>
   </div>
 </nav>
 
@@ -382,7 +460,7 @@
         btn.disabled = false;
         btn.textContent = 'Entrar';
         ocultarLogin();
-        iniciarApp();
+        mostrarPerfiles();
       } else {
         btn.disabled = false;
         btn.textContent = 'Entrar';
@@ -420,20 +498,24 @@
     if (e.key === 'Enter') { document.getElementById('login-pass').focus(); }
   });
 
-  // Cerrar sesión
+  // Cerrar sesión (botón del nav) → vuelve a "¿Quién está viendo?"
   document.getElementById('logout-btn').addEventListener('click', function() {
+    // Solo cambiar de perfil, no cerrar la cuenta entera
+    clearPerfilActivo();
+    location.reload();
+  });
+
+  // Cerrar sesión de la cuenta completa (vuelve al login)
+  document.getElementById('logout-cuenta-btn').addEventListener('click', function() {
     var session = getSession();
-    // Avisar a Supabase que cierre el token (no es crítico si falla)
     if (session && session.access_token) {
       fetch(SUPABASE_URL + '/auth/v1/logout', {
         method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + session.access_token
-        }
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + session.access_token }
       }).catch(function() {});
     }
     clearSession();
+    clearPerfilActivo();
     location.reload();
   });
 
@@ -445,16 +527,14 @@
       var ahora = Math.floor(Date.now() / 1000);
       var vencido = session.expires_at && session.expires_at < ahora;
       if (vencido && session.refresh_token) {
-        // Intentar refrescar el token
         refrescarToken(session.refresh_token);
       } else if (vencido) {
-        // Vencido y sin forma de refrescar → login
         clearSession();
         mostrarLogin();
       } else {
-        // Sesión válida → entrar
+        // Sesión válida → ir a perfiles (o directo al catálogo si ya hay perfil activo)
         ocultarLogin();
-        iniciarApp();
+        entrarConSesion();
       }
     } else {
       mostrarLogin();
@@ -475,7 +555,7 @@
       if (result.ok && result.data.access_token) {
         saveSession(result.data);
         ocultarLogin();
-        iniciarApp();
+        entrarConSesion();
       } else {
         clearSession();
         mostrarLogin();
@@ -487,7 +567,310 @@
     });
   }
 
+  // Decide si mostrar perfiles o entrar directo (si ya se eligió perfil en esta sesión)
+  function entrarConSesion() {
+    var perfilActivo = getPerfilActivo();
+    if (perfilActivo) {
+      iniciarApp();
+    } else {
+      mostrarPerfiles();
+    }
+  }
+
   window.open = function() { return null; };
+
+  // ===================== PERFILES =====================
+
+  var AVATARES = ['🎬','🍿','👾','🦊','🐼','🚀','🌟','🎮','🦁','🐸','🎨','👻','🐱','🐶','🦄','⚡'];
+  var COLORES = ['#e50914','#3b82f6','#22c55e','#a855f7','#f59e0b','#ec4899','#14b8a6','#6366f1','#ef4444','#10b981'];
+  var PERFIL_KEY = 'sh_perfil';
+  var perfilesCache = [];
+  var modoAdminPerfiles = false;
+  var perfilEditando = null;
+  var pmAvatarSel = AVATARES[0];
+  var pmColorSel = COLORES[0];
+
+  function getPerfilActivo() {
+    try {
+      var raw = localStorage.getItem(PERFIL_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+  function setPerfilActivo(perfil) {
+    try { localStorage.setItem(PERFIL_KEY, JSON.stringify(perfil)); } catch (e) {}
+  }
+  function clearPerfilActivo() {
+    try { localStorage.removeItem(PERFIL_KEY); } catch (e) {}
+  }
+
+  function authHeaders() {
+    var session = getSession();
+    var token = session ? session.access_token : SUPABASE_KEY;
+    return {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    };
+  }
+
+  function mostrarPerfiles() {
+    document.getElementById('perfiles-screen').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    modoAdminPerfiles = false;
+    document.getElementById('perfiles-screen').classList.remove('perfiles-screen-admin');
+    var adminBtn = document.getElementById('perfiles-admin-btn');
+    adminBtn.classList.remove('activo');
+    adminBtn.textContent = '✏️ Administrar perfiles';
+    cargarPerfiles();
+  }
+
+  function ocultarPerfiles() {
+    document.getElementById('perfiles-screen').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function cargarPerfiles() {
+    var grid = document.getElementById('perfiles-grid');
+    grid.innerHTML = '<div style="color:var(--muted);font-size:14px;">Cargando...</div>';
+
+    fetch(SUPABASE_URL + '/rest/v1/perfiles?select=*&order=created_at.asc', {
+      headers: authHeaders()
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      perfilesCache = Array.isArray(data) ? data : [];
+      renderPerfiles();
+    })
+    .catch(function(e) {
+      console.error('Error cargando perfiles:', e);
+      grid.innerHTML = '<div style="color:var(--accent2);font-size:14px;">Error al cargar perfiles</div>';
+    });
+  }
+
+  function renderPerfiles() {
+    var grid = document.getElementById('perfiles-grid');
+    grid.innerHTML = '';
+
+    perfilesCache.forEach(function(p) {
+      var item = document.createElement('div');
+      item.className = 'perfil-item';
+      var lock = p.pin ? '<div class="perfil-lock">🔒</div>' : '';
+      item.innerHTML =
+        '<div class="perfil-avatar" style="background:' + (p.color || '#e50914') + '">' +
+        (p.avatar || '🎬') + lock +
+        '<button class="perfil-delete" data-id="' + p.id + '">✕</button></div>' +
+        '<div class="perfil-nombre">' + p.nombre + '</div>';
+
+      item.addEventListener('click', function(e) {
+        if (e.target.classList.contains('perfil-delete')) return;
+        if (modoAdminPerfiles) {
+          abrirModalPerfil(p);
+        } else {
+          elegirPerfil(p);
+        }
+      });
+
+      var delBtn = item.querySelector('.perfil-delete');
+      delBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        borrarPerfil(p);
+      });
+
+      grid.appendChild(item);
+    });
+
+    if (perfilesCache.length < 6) {
+      var addItem = document.createElement('div');
+      addItem.className = 'perfil-item perfil-add';
+      addItem.innerHTML =
+        '<div class="perfil-avatar">+</div>' +
+        '<div class="perfil-nombre">Agregar perfil</div>';
+      addItem.addEventListener('click', function() { abrirModalPerfil(null); });
+      grid.appendChild(addItem);
+    }
+  }
+
+  function elegirPerfil(perfil) {
+    setPerfilActivo({ id: perfil.id, nombre: perfil.nombre, avatar: perfil.avatar, color: perfil.color });
+    ocultarPerfiles();
+    iniciarApp();
+  }
+
+  document.getElementById('perfiles-admin-btn').addEventListener('click', function() {
+    modoAdminPerfiles = !modoAdminPerfiles;
+    var screen = document.getElementById('perfiles-screen');
+    if (modoAdminPerfiles) {
+      screen.classList.add('perfiles-screen-admin');
+      this.classList.add('activo');
+      this.textContent = '✓ Listo';
+    } else {
+      screen.classList.remove('perfiles-screen-admin');
+      this.classList.remove('activo');
+      this.textContent = '✏️ Administrar perfiles';
+    }
+  });
+
+  document.getElementById('perfiles-logout').addEventListener('click', function() {
+    var session = getSession();
+    if (session && session.access_token) {
+      fetch(SUPABASE_URL + '/auth/v1/logout', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + session.access_token }
+      }).catch(function() {});
+    }
+    clearSession();
+    clearPerfilActivo();
+    location.reload();
+  });
+
+  // ---------- MODAL CREAR / EDITAR PERFIL ----------
+
+  function abrirModalPerfil(perfil) {
+    perfilEditando = perfil;
+    document.getElementById('pm-error').textContent = '';
+
+    if (perfil) {
+      document.getElementById('pm-titulo').textContent = 'Editar perfil';
+      document.getElementById('pm-nombre').value = perfil.nombre;
+      pmAvatarSel = perfil.avatar || AVATARES[0];
+      pmColorSel = perfil.color || COLORES[0];
+    } else {
+      document.getElementById('pm-titulo').textContent = 'Nuevo perfil';
+      document.getElementById('pm-nombre').value = '';
+      pmAvatarSel = AVATARES[0];
+      pmColorSel = COLORES[0];
+    }
+
+    renderEmojiPicker();
+    renderColorPicker();
+    actualizarPreview();
+    document.getElementById('perfil-modal').classList.add('active');
+  }
+
+  function cerrarModalPerfil() {
+    document.getElementById('perfil-modal').classList.remove('active');
+    perfilEditando = null;
+  }
+
+  function actualizarPreview() {
+    var av = document.getElementById('pm-preview-avatar');
+    av.textContent = pmAvatarSel;
+    av.style.background = pmColorSel;
+  }
+
+  function renderEmojiPicker() {
+    var cont = document.getElementById('pm-emojis');
+    cont.innerHTML = '';
+    AVATARES.forEach(function(em) {
+      var b = document.createElement('div');
+      b.className = 'pm-emoji' + (em === pmAvatarSel ? ' sel' : '');
+      b.textContent = em;
+      b.addEventListener('click', function() {
+        pmAvatarSel = em;
+        renderEmojiPicker();
+        actualizarPreview();
+      });
+      cont.appendChild(b);
+    });
+  }
+
+  function renderColorPicker() {
+    var cont = document.getElementById('pm-colors');
+    cont.innerHTML = '';
+    COLORES.forEach(function(col) {
+      var b = document.createElement('div');
+      b.className = 'pm-color' + (col === pmColorSel ? ' sel' : '');
+      b.style.background = col;
+      b.addEventListener('click', function() {
+        pmColorSel = col;
+        renderColorPicker();
+        actualizarPreview();
+      });
+      cont.appendChild(b);
+    });
+  }
+
+  document.getElementById('pm-cancel').addEventListener('click', cerrarModalPerfil);
+
+  document.getElementById('pm-save').addEventListener('click', function() {
+    var nombre = document.getElementById('pm-nombre').value.trim();
+    var errorEl = document.getElementById('pm-error');
+    if (!nombre) {
+      errorEl.textContent = 'Poné un nombre';
+      return;
+    }
+
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+
+    var session = getSession();
+    var userId = session ? parseJwtSub(session.access_token) : null;
+
+    if (perfilEditando) {
+      fetch(SUPABASE_URL + '/rest/v1/perfiles?id=eq.' + perfilEditando.id, {
+        method: 'PATCH',
+        headers: authHeaders(),
+        body: JSON.stringify({ nombre: nombre, avatar: pmAvatarSel, color: pmColorSel })
+      })
+      .then(function(res) {
+        btn.disabled = false; btn.textContent = 'Guardar';
+        if (res.ok) {
+          cerrarModalPerfil();
+          cargarPerfiles();
+        } else {
+          errorEl.textContent = 'Error al guardar';
+        }
+      })
+      .catch(function() { btn.disabled = false; btn.textContent = 'Guardar'; errorEl.textContent = 'Error de conexión'; });
+    } else {
+      fetch(SUPABASE_URL + '/rest/v1/perfiles', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ user_id: userId, nombre: nombre, avatar: pmAvatarSel, color: pmColorSel })
+      })
+      .then(function(res) {
+        btn.disabled = false; btn.textContent = 'Guardar';
+        if (res.ok) {
+          cerrarModalPerfil();
+          cargarPerfiles();
+        } else {
+          return res.json().then(function(d) {
+            errorEl.textContent = 'Error al crear perfil';
+            console.error('Error crear perfil:', d);
+          });
+        }
+      })
+      .catch(function() { btn.disabled = false; btn.textContent = 'Guardar'; errorEl.textContent = 'Error de conexión'; });
+    }
+  });
+
+  function borrarPerfil(perfil) {
+    if (!confirm('¿Eliminar el perfil "' + perfil.nombre + '"?')) return;
+    fetch(SUPABASE_URL + '/rest/v1/perfiles?id=eq.' + perfil.id, {
+      method: 'DELETE',
+      headers: authHeaders()
+    })
+    .then(function(res) {
+      if (res.ok) {
+        var activo = getPerfilActivo();
+        if (activo && activo.id === perfil.id) clearPerfilActivo();
+        cargarPerfiles();
+      } else {
+        alert('Error al eliminar el perfil');
+      }
+    })
+    .catch(function() { alert('Error de conexión'); });
+  }
+
+  function parseJwtSub(token) {
+    try {
+      var payload = token.split('.')[1];
+      payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+      var decoded = JSON.parse(atob(payload));
+      return decoded.sub;
+    } catch (e) { return null; }
+  }
 
   document.addEventListener('click', function(e) {
     var a = e.target.closest('a');
