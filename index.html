@@ -132,6 +132,25 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    /* LOGIN */
+    #login-screen { display: none; position: fixed; inset: 0; z-index: 500; background: var(--bg); align-items: center; justify-content: center; padding: 20px; }
+    #login-screen.active { display: flex; }
+    #login-bg { position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(229,9,20,0.12), transparent 55%), radial-gradient(circle at 70% 80%, rgba(229,9,20,0.08), transparent 50%); }
+    .login-card { position: relative; z-index: 2; width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .login-logo { font-size: 32px; font-weight: 900; letter-spacing: -1px; color: var(--accent); text-transform: uppercase; text-align: center; margin-bottom: 6px; }
+    .login-sub { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+    .login-field { margin-bottom: 16px; }
+    .login-field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .login-field input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border 0.2s; }
+    .login-field input:focus { border-color: var(--accent); }
+    #login-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; margin-top: 8px; }
+    #login-btn:hover { background: #c40812; }
+    #login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    #login-error { color: var(--accent2); font-size: 13px; text-align: center; margin-top: 14px; min-height: 18px; }
+    /* Botón cerrar sesión en nav */
+    #logout-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-left: 12px; white-space: nowrap; }
+    #logout-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+    .nav-right { display: flex; align-items: center; }
     @media (max-width: 600px) {
       nav { padding: 12px 16px; }
       #hero { padding: 40px 16px; }
@@ -143,6 +162,8 @@
       .carrusel-titulo { font-size: 16px; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
       .search-box { width: 180px; }
+      .login-card { padding: 32px 24px; }
+      #logout-btn { padding: 7px 12px; font-size: 12px; margin-left: 8px; }
       #modal-body { padding: 16px; }
       .tab { padding: 8px 12px; font-size: 13px; }
       .player-btn { width: 44px; height: 44px; font-size: 18px; }
@@ -160,13 +181,35 @@
 </head>
 <body>
 
+<!-- PANTALLA DE LOGIN -->
+<div id="login-screen">
+  <div id="login-bg"></div>
+  <div class="login-card">
+    <div class="login-logo">🎬 StreamHub</div>
+    <div class="login-sub">Iniciá sesión para continuar</div>
+    <div class="login-field">
+      <label for="login-email">Usuario</label>
+      <input type="text" id="login-email" placeholder="tu-usuario" autocomplete="username"/>
+    </div>
+    <div class="login-field">
+      <label for="login-pass">Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button id="login-btn">Entrar</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
 <nav>
   <div class="logo">🎬 StreamHub</div>
-  <div class="search-box">
-    <svg width="14" height="14" viewBox="0 0 20 20" fill="#8888a0">
-      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
-    </svg>
-    <input type="text" id="search-input" placeholder="Buscar..."/>
+  <div class="nav-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="#8888a0">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Buscar..."/>
+    </div>
+    <button id="logout-btn" title="Cerrar sesión">Salir</button>
   </div>
 </nav>
 
@@ -278,6 +321,171 @@
 
   var SUPABASE_URL = "https://uqsachuontvqomhnybxs.supabase.co";
   var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU";
+
+  // ===================== AUTENTICACIÓN =====================
+  // Dominio ficticio: el usuario escribe "familia" y se completa a "familia@stream.local"
+  var EMAIL_DOMAIN = "@stream.local";
+  var TOKEN_KEY = "sh_session";
+
+  function getSession() {
+    try {
+      var raw = window.sessionStorageDisabled ? null : localStorage.getItem(TOKEN_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function saveSession(session) {
+    try { localStorage.setItem(TOKEN_KEY, JSON.stringify(session)); } catch (e) {}
+  }
+
+  function clearSession() {
+    try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+  }
+
+  function mostrarLogin() {
+    document.getElementById('login-screen').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function ocultarLogin() {
+    document.getElementById('login-screen').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Normaliza lo que escribe el user: si ya puso un @, lo respeta; si no, agrega el dominio
+  function normalizarEmail(valor) {
+    valor = (valor || '').trim();
+    if (!valor) return '';
+    if (valor.indexOf('@') !== -1) return valor;
+    return valor + EMAIL_DOMAIN;
+  }
+
+  function hacerLogin(email, password) {
+    var btn = document.getElementById('login-btn');
+    var errorEl = document.getElementById('login-error');
+    errorEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+
+    fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email: email, password: password })
+    })
+    .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+    .then(function(result) {
+      if (result.ok && result.data.access_token) {
+        saveSession(result.data);
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+        ocultarLogin();
+        iniciarApp();
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+        var msg = 'Usuario o contraseña incorrectos';
+        if (result.data && result.data.error_description) {
+          if (result.data.error_description.indexOf('Email not confirmed') !== -1) {
+            msg = 'Cuenta sin confirmar. Avisá al administrador.';
+          }
+        }
+        errorEl.textContent = msg;
+      }
+    })
+    .catch(function(e) {
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      errorEl.textContent = 'Error de conexión. Probá de nuevo.';
+    });
+  }
+
+  document.getElementById('login-btn').addEventListener('click', function() {
+    var email = normalizarEmail(document.getElementById('login-email').value);
+    var pass = document.getElementById('login-pass').value;
+    if (!email || !pass) {
+      document.getElementById('login-error').textContent = 'Completá usuario y contraseña';
+      return;
+    }
+    hacerLogin(email, pass);
+  });
+
+  // Enter para enviar
+  document.getElementById('login-pass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { document.getElementById('login-btn').click(); }
+  });
+  document.getElementById('login-email').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { document.getElementById('login-pass').focus(); }
+  });
+
+  // Cerrar sesión
+  document.getElementById('logout-btn').addEventListener('click', function() {
+    var session = getSession();
+    // Avisar a Supabase que cierre el token (no es crítico si falla)
+    if (session && session.access_token) {
+      fetch(SUPABASE_URL + '/auth/v1/logout', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + session.access_token
+        }
+      }).catch(function() {});
+    }
+    clearSession();
+    location.reload();
+  });
+
+  // Verifica si hay sesión válida al abrir
+  function chequearSesion() {
+    var session = getSession();
+    if (session && session.access_token) {
+      // Chequear que el token no esté vencido
+      var ahora = Math.floor(Date.now() / 1000);
+      var vencido = session.expires_at && session.expires_at < ahora;
+      if (vencido && session.refresh_token) {
+        // Intentar refrescar el token
+        refrescarToken(session.refresh_token);
+      } else if (vencido) {
+        // Vencido y sin forma de refrescar → login
+        clearSession();
+        mostrarLogin();
+      } else {
+        // Sesión válida → entrar
+        ocultarLogin();
+        iniciarApp();
+      }
+    } else {
+      mostrarLogin();
+    }
+  }
+
+  function refrescarToken(refreshToken) {
+    fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    })
+    .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, data: data }; }); })
+    .then(function(result) {
+      if (result.ok && result.data.access_token) {
+        saveSession(result.data);
+        ocultarLogin();
+        iniciarApp();
+      } else {
+        clearSession();
+        mostrarLogin();
+      }
+    })
+    .catch(function() {
+      clearSession();
+      mostrarLogin();
+    });
+  }
 
   window.open = function() { return null; };
 
@@ -991,8 +1199,18 @@
     else if (e.key === 'Enter') { e.preventDefault(); if (cards[tvFocusIndex]) cards[tvFocusIndex].click(); }
   });
 
-  detectarTV();
-  cargarPeliculas();
+  // ===================== ARRANQUE =====================
+
+  var appIniciada = false;
+  function iniciarApp() {
+    if (appIniciada) return; // evitar doble arranque
+    appIniciada = true;
+    detectarTV();
+    cargarPeliculas();
+  }
+
+  // Al cargar la página: chequear sesión. Si hay → arranca app. Si no → login.
+  chequearSesion();
 </script>
 </body>
 </html>
