@@ -1,0 +1,29 @@
+name: Ping Supabase
+
+# Mantiene el proyecto de Supabase activo para que no se pause por inactividad.
+# El plan gratis pausa tras 7 días sin actividad; esto le pega cada 2 días.
+
+on:
+  schedule:
+    # Corre a las 12:00 UTC cada 2 días (min hora dia mes dia-semana)
+    - cron: '0 12 */2 * *'
+  # Permite ejecutarlo a mano desde la pestaña Actions de GitHub
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar Supabase para mantenerlo activo
+        run: |
+          echo "Haciendo ping a Supabase..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://uqsachuontvqomhnybxs.supabase.co/rest/v1/peliculas?select=id&limit=1" \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxc2FjaHVvbnR2cW9taG55YnhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0ODQyNjQsImV4cCI6MjA5NzA2MDI2NH0.N54v90A5rOcaTM_YVbGnAQUWUF7b-XgZj7jQ42tEHqU")
+          echo "Codigo HTTP: $HTTP_CODE"
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Ping exitoso — Supabase activo"
+          else
+            echo "⚠️ Respuesta inesperada: $HTTP_CODE"
+            exit 1
+          fi
