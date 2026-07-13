@@ -33,11 +33,31 @@
     .btn-play:hover { background: #c40812; transform: scale(1.02); }
     .btn-info { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; backdrop-filter: blur(4px); }
     .btn-info:hover { background: rgba(255,255,255,0.25); }
+    /* NIVEL 1 — tipos (Películas / Series) */
+    #tipos-container { padding: 12px 40px 0; display: flex; gap: 12px; }
+    .tipo-btn { padding: 10px 24px; font-size: 15px; font-weight: 700; cursor: pointer; color: var(--muted); border: 1px solid var(--border); background: var(--surface); border-radius: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+    .tipo-btn:hover { color: var(--text); border-color: var(--accent); }
+    .tipo-btn.active { color: white; background: var(--accent); border-color: var(--accent); }
+    /* NIVEL 2 — géneros */
     #tabs-container { padding: 0 40px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
     .tab { padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--muted); border: none; background: none; font-family: 'Inter', sans-serif; transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .tab:hover { color: var(--text); }
     .tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
     #catalogo { padding: 20px 40px 60px; }
+    /* CARRUSELES tipo Netflix */
+    #carruseles { margin-bottom: 8px; }
+    #carruseles.oculto { display: none; }
+    .carrusel-seccion { margin-bottom: 28px; }
+    .carrusel-titulo { font-size: 18px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .carrusel { display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; padding-bottom: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+    .carrusel::-webkit-scrollbar { height: 6px; }
+    .carrusel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .carrusel-card { flex: 0 0 auto; width: 140px; cursor: pointer; border-radius: 10px; overflow: hidden; background: var(--card); border: 1px solid var(--border); transition: all 0.25s; scroll-snap-align: start; }
+    .carrusel-card:hover, .carrusel-card.tv-focused { transform: translateY(-6px) scale(1.03); border-color: var(--accent); box-shadow: 0 12px 32px rgba(229,9,20,0.25); }
+    .carrusel-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+    .carrusel-card .cc-info { padding: 8px 10px; }
+    .carrusel-card .cc-titulo { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .carrusel-card .cc-meta { font-size: 10px; color: var(--muted); }
     .seccion-titulo { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
     .seccion-titulo::before { content: ''; display: block; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
@@ -88,6 +108,13 @@
     #player-spinner { display: none; align-items: center; justify-content: center; aspect-ratio: 16/9; background: #000; }
     #player-spinner.active { display: flex; }
     #player-iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+    /* FULLSCREEN — el iframe llena toda la pantalla sin barras negras */
+    #player-container:fullscreen { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+    #player-container:fullscreen #player-iframe { width: 100vw; height: 100vh; aspect-ratio: auto; }
+    #player-container:-webkit-full-screen { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+    #player-container:-webkit-full-screen #player-iframe { width: 100vw; height: 100vh; aspect-ratio: auto; }
+    #player-container:-moz-full-screen { width: 100vw; height: 100vh; }
+    #player-container:-moz-full-screen #player-iframe { width: 100vw; height: 100vh; aspect-ratio: auto; }
     #player-barra { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: flex-end; padding: 10px 14px; background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent); transition: opacity 0.4s ease; opacity: 1; z-index: 20; gap: 8px; }
     #player-barra.oculta { opacity: 0; pointer-events: none; }
     #player-barra-trigger { position: absolute; top: 0; left: 0; right: 0; height: 48px; z-index: 19; cursor: pointer; }
@@ -109,7 +136,11 @@
       nav { padding: 12px 16px; }
       #hero { padding: 40px 16px; }
       #catalogo { padding: 16px 16px 40px; }
+      #tipos-container { padding: 10px 16px 0; }
       #tabs-container { padding: 0 16px; }
+      .tipo-btn { padding: 8px 18px; font-size: 14px; }
+      .carrusel-card { width: 115px; }
+      .carrusel-titulo { font-size: 16px; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
       .search-box { width: 180px; }
       #modal-body { padding: 16px; }
@@ -121,6 +152,7 @@
       nav { padding: 20px 60px; }
       #hero { padding: 80px 60px; }
       #catalogo { padding: 24px 60px 80px; }
+      #tipos-container { padding: 16px 60px 0; }
       #tabs-container { padding: 0 60px; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
     }
@@ -156,17 +188,35 @@
   </div>
 </div>
 
+<!-- NIVEL 1: tipo de contenido -->
+<div id="tipos-container">
+  <button class="tipo-btn active" data-tipo="peliculas">&#127916; Películas</button>
+  <button class="tipo-btn" data-tipo="series">&#128250; Series</button>
+</div>
+
+<!-- NIVEL 2: géneros -->
 <div id="tabs-container">
-  <button class="tab active" data-tab="todas">&#127916; Películas</button>
-  <button class="tab" data-tab="accion">&#128165; Acción</button>
-  <button class="tab" data-tab="comedia">&#128514; Comedia</button>
-  <button class="tab" data-tab="terror">&#128123; Terror</button>
-  <button class="tab" data-tab="drama">&#127917; Drama</button>
-  <button class="tab" data-tab="animacion">&#127912; Animación</button>
-  <button class="tab" data-tab="series">&#128250; Series</button>
+  <button class="tab active" data-tab="todas">Todas</button>
+  <button class="tab" data-tab="accion">Acción</button>
+  <button class="tab" data-tab="comedia">Comedia</button>
+  <button class="tab" data-tab="terror">Terror</button>
+  <button class="tab" data-tab="drama">Drama</button>
+  <button class="tab" data-tab="animacion">Animación</button>
 </div>
 
 <div id="catalogo">
+  <!-- CARRUSELES tipo Netflix (solo en Todas sin búsqueda) -->
+  <div id="carruseles">
+    <div class="carrusel-seccion" id="carrusel-recientes-wrap">
+      <div class="carrusel-titulo">🆕 Recién agregadas</div>
+      <div class="carrusel" id="carrusel-recientes"></div>
+    </div>
+    <div class="carrusel-seccion" id="carrusel-novedades-wrap">
+      <div class="carrusel-titulo">⭐ Novedades</div>
+      <div class="carrusel" id="carrusel-novedades"></div>
+    </div>
+  </div>
+
   <div class="seccion-titulo" id="seccion-titulo">Todas las películas</div>
   <div class="grid" id="grid"></div>
   <div id="empty"><h3>Sin resultados</h3><p>No encontramos nada con ese nombre.</p></div>
@@ -266,6 +316,7 @@
   var todasLasSeries = [];
   var peliculaHero = null;
   var tabActual = 'todas';
+  var tipoActual = 'peliculas';
   var tvFocusIndex = 0;
   var modalAbierto = false;
   var servidorFocusIndex = 0;
@@ -282,6 +333,23 @@
     return '\u2605 N/A';
   }
 
+  // Extrae el año como número. Soporta "2024" y rangos "2022-2024" (toma el mayor).
+  function getAnioNum(item) {
+    var a = (item && item.año) ? String(item.año) : '';
+    var nums = a.match(/\d{4}/g);
+    if (!nums) return 0;
+    var max = 0;
+    nums.forEach(function(n) { var v = parseInt(n, 10); if (v > max) max = v; });
+    return max;
+  }
+
+  // Ordena por año (más nuevas primero). Empate → mantiene orden de subida (id desc ya viene de Supabase).
+  function ordenarPorAnio(lista) {
+    return lista.slice().sort(function(a, b) {
+      return getAnioNum(b) - getAnioNum(a);
+    });
+  }
+
   // ===================== CARGA =====================
 
   function cargarPeliculas() {
@@ -292,7 +360,10 @@
     .then(function(data) {
       todasLasPeliculas = data;
       filtrarYRender('');
-      if (data.length > 0) setHero(data[0]);
+      if (data.length > 0) {
+        var ordenadas = ordenarPorAnio(data);
+        setHero(ordenadas[0]);
+      }
       document.getElementById('loading').classList.remove('active');
     })
     .catch(function(e) {
@@ -309,7 +380,7 @@
     .then(function(res) { return res.json(); })
     .then(function(data) {
       todasLasSeries = data;
-      renderSeries(data);
+      if (tipoActual === 'series') { filtrarYRender(''); }
       document.getElementById('loading').classList.remove('active');
     })
     .catch(function(e) {
@@ -338,6 +409,7 @@
   // ===================== TABS =====================
 
   var tabs = document.querySelectorAll('.tab');
+  var tiposBtns = document.querySelectorAll('.tipo-btn');
   var mapaGeneros = {
     'accion': ['acción', 'accion'],
     'comedia': ['comedia'],
@@ -346,6 +418,38 @@
     'animacion': ['animación', 'animacion']
   };
 
+  // NIVEL 1 — cambiar entre Películas y Series
+  tiposBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      tiposBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      tipoActual = btn.dataset.tipo;
+
+      // Reset del género a "Todas" al cambiar de tipo
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      tabs[0].classList.add('active');
+      tabActual = 'todas';
+
+      document.getElementById('empty').classList.remove('active');
+      document.getElementById('ver-mas-container').style.display = 'none';
+      document.getElementById('grid').innerHTML = '';
+      document.getElementById('search-input').value = '';
+
+      if (tipoActual === 'series') {
+        document.getElementById('search-input').placeholder = 'Buscar serie...';
+        if (todasLasSeries.length === 0) {
+          cargarSeries();
+        } else {
+          filtrarYRender('');
+        }
+      } else {
+        document.getElementById('search-input').placeholder = 'Buscar película...';
+        filtrarYRender('');
+      }
+    });
+  });
+
+  // NIVEL 2 — cambiar de género (filtra dentro del tipo actual)
   tabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
       tabs.forEach(function(t) { t.classList.remove('active'); });
@@ -356,18 +460,6 @@
       document.getElementById('ver-mas-container').style.display = 'none';
       document.getElementById('grid').innerHTML = '';
 
-      if (tabActual === 'series') {
-        document.getElementById('seccion-titulo').textContent = 'Series';
-        document.getElementById('search-input').placeholder = 'Buscar serie...';
-        if (todasLasSeries.length === 0) {
-          cargarSeries();
-        } else {
-          renderSeries(todasLasSeries);
-        }
-        return;
-      }
-
-      document.getElementById('search-input').placeholder = 'Buscar película...';
       var q = document.getElementById('search-input').value.toLowerCase().trim();
       filtrarYRender(q);
     });
@@ -376,30 +468,45 @@
   // ===================== PELICULAS =====================
 
   function filtrarYRender(query) {
-    var peliculas = todasLasPeliculas.slice();
+    // Fuente según tipo actual
+    var fuente = (tipoActual === 'series') ? todasLasSeries : todasLasPeliculas;
+    var items = fuente.slice();
+
     if (query) {
-      peliculas = peliculas.filter(function(p) {
+      items = items.filter(function(p) {
         return p.titulo.toLowerCase().indexOf(query) !== -1 ||
                (p.genero || '').toLowerCase().indexOf(query) !== -1;
       });
     }
     if (tabActual !== 'todas') {
       var generosTab = mapaGeneros[tabActual] || [];
-      peliculas = peliculas.filter(function(p) {
+      items = items.filter(function(p) {
         var genero = (p.genero || '').toLowerCase();
         return generosTab.some(function(g) { return genero.indexOf(g) !== -1; });
       });
     }
-    var tituloSeccion = 'Todas las películas';
+
+    // Ordenar por año (más nuevas primero)
+    items = ordenarPorAnio(items);
+
+    // Título de sección
+    var base = (tipoActual === 'series') ? 'Series' : 'Todas las películas';
+    var tituloSeccion = base;
     if (query) {
       tituloSeccion = 'Resultados para "' + query + '"';
     } else if (tabActual !== 'todas') {
       var tabEl = null;
       tabs.forEach(function(t) { if (t.dataset.tab === tabActual) tabEl = t; });
-      if (tabEl) tituloSeccion = tabEl.textContent;
+      if (tabEl) {
+        tituloSeccion = tabEl.textContent + (tipoActual === 'series' ? ' — Series' : '');
+      }
     }
     document.getElementById('seccion-titulo').textContent = tituloSeccion;
-    itemsFiltrados = peliculas;
+
+    // Mostrar/ocultar carruseles según contexto
+    actualizarVisibilidadCarruseles(query);
+
+    itemsFiltrados = items;
     paginaActual = 1;
     renderCatalogo(false);
   }
@@ -429,12 +536,19 @@
       var card = document.createElement('div');
       card.className = 'card';
       card.tabIndex = 0;
+      var esSerie = (tipoActual === 'series');
+      var metaDer = esSerie
+        ? ((p.temporadas ? p.temporadas.length : 0) + ' temp.')
+        : ((p.genero || '').split(',')[0]);
       card.innerHTML =
         '<img src="' + p.imagen + '" alt="' + p.titulo + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen\'"/>' +
         '<div class="card-info"><div class="card-titulo">' + p.titulo + '</div>' +
         '<div class="card-meta"><span>' + (p.año || '') + '</span>' +
-        '<span class="card-genero">' + ((p.genero || '').split(',')[0]) + '</span></div></div>';
-      card.addEventListener('click', function() { abrirModalPelicula(p, false); });
+        '<span class="card-genero">' + metaDer + '</span></div></div>';
+      card.addEventListener('click', function() {
+        if (esSerie) { abrirModalSerie(p); }
+        else { abrirModalPelicula(p, false); }
+      });
       grid.appendChild(card);
     });
 
@@ -450,33 +564,59 @@
     renderCatalogo(true);
   });
 
-  // ===================== SERIES =====================
+  // ===================== CARRUSELES =====================
 
-  function renderSeries(series) {
-    var grid = document.getElementById('grid');
-    var empty = document.getElementById('empty');
-    grid.innerHTML = '';
-    tvFocusIndex = 0;
-
-    if (!series || series.length === 0) {
-      empty.classList.add('active');
-      return;
-    }
-    empty.classList.remove('active');
-
-    series.forEach(function(s) {
-      var card = document.createElement('div');
-      card.className = 'card';
-      card.tabIndex = 0;
-      var totalTemp = s.temporadas ? s.temporadas.length : 0;
-      card.innerHTML =
-        '<img src="' + s.imagen + '" alt="' + s.titulo + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen\'"/>' +
-        '<div class="card-info"><div class="card-titulo">' + s.titulo + '</div>' +
-        '<div class="card-meta"><span>' + (s.año || '') + '</span>' +
-        '<span class="card-genero">' + totalTemp + ' temp.</span></div></div>';
-      card.addEventListener('click', function() { abrirModalSerie(s); });
-      grid.appendChild(card);
+  function crearCarruselCard(item, esSerie) {
+    var card = document.createElement('div');
+    card.className = 'carrusel-card';
+    card.tabIndex = 0;
+    var metaDer = esSerie
+      ? ((item.temporadas ? item.temporadas.length : 0) + ' temp.')
+      : (item.año || '');
+    card.innerHTML =
+      '<img src="' + item.imagen + '" alt="' + item.titulo + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen\'"/>' +
+      '<div class="cc-info"><div class="cc-titulo">' + item.titulo + '</div>' +
+      '<div class="cc-meta">' + metaDer + '</div></div>';
+    card.addEventListener('click', function() {
+      if (esSerie) { abrirModalSerie(item); }
+      else { abrirModalPelicula(item, false); }
     });
+    return card;
+  }
+
+  function renderCarruseles() {
+    var fuente = (tipoActual === 'series') ? todasLasSeries : todasLasPeliculas;
+    var esSerie = (tipoActual === 'series');
+
+    // Recién agregadas = orden original (id desc, como viene de Supabase). Primeras 15.
+    var recientes = fuente.slice(0, 15);
+
+    // Novedades = por año (más nuevas primero). Primeras 15.
+    var novedades = ordenarPorAnio(fuente).slice(0, 15);
+
+    var contRec = document.getElementById('carrusel-recientes');
+    var contNov = document.getElementById('carrusel-novedades');
+    contRec.innerHTML = '';
+    contNov.innerHTML = '';
+
+    recientes.forEach(function(item) { contRec.appendChild(crearCarruselCard(item, esSerie)); });
+    novedades.forEach(function(item) { contNov.appendChild(crearCarruselCard(item, esSerie)); });
+
+    // Si no hay datos, ocultar cada sección individual
+    document.getElementById('carrusel-recientes-wrap').style.display = recientes.length ? 'block' : 'none';
+    document.getElementById('carrusel-novedades-wrap').style.display = novedades.length ? 'block' : 'none';
+  }
+
+  // Muestra u oculta los carruseles según contexto (solo en "Todas" sin búsqueda)
+  function actualizarVisibilidadCarruseles(query) {
+    var carruseles = document.getElementById('carruseles');
+    var mostrar = (tabActual === 'todas') && (!query || query.length === 0);
+    if (mostrar) {
+      carruseles.classList.remove('oculto');
+      renderCarruseles();
+    } else {
+      carruseles.classList.add('oculto');
+    }
   }
 
   // ===================== MODAL PELICULA =====================
@@ -766,14 +906,7 @@
     clearTimeout(searchTimeout);
     var q = e.target.value.toLowerCase().trim();
     searchTimeout = setTimeout(function() {
-      if (tabActual === 'series') {
-        var filtradas = todasLasSeries.filter(function(s) {
-          return s.titulo.toLowerCase().indexOf(q) !== -1;
-        });
-        renderSeries(filtradas);
-      } else {
-        filtrarYRender(q);
-      }
+      filtrarYRender(q);
     }, 300);
   });
 
