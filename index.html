@@ -199,6 +199,74 @@
     .pm-btn-cancel { flex: 1; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
     .pm-btn-cancel:hover { background: var(--border); }
     .pm-error { color: var(--accent2); font-size: 13px; text-align: center; margin-top: 12px; min-height: 16px; }
+    /* AVATAR EN EL NAV + MENÚ */
+    #nav-avatar { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; margin-left: 12px; border: 2px solid transparent; transition: border 0.2s; flex-shrink: 0; }
+    #nav-avatar:hover { border-color: white; }
+    #avatar-menu { display: none; position: fixed; top: 64px; right: 40px; z-index: 250; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-width: 220px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); overflow: hidden; }
+    #avatar-menu.active { display: block; }
+    .am-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+    .am-header-avatar { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .am-header-info { overflow: hidden; }
+    .am-header-nombre { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .am-header-cuenta { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .am-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; transition: background 0.15s; border: none; background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+    .am-item:hover { background: var(--card); }
+    .am-item.danger { color: var(--accent2); }
+    .am-icon { font-size: 16px; width: 20px; text-align: center; }
+    /* PANEL DE CONFIGURACIÓN */
+    #config-modal { display: none; position: fixed; inset: 0; z-index: 470; background: rgba(0,0,0,0.92); align-items: center; justify-content: center; padding: 20px; }
+    #config-modal.active { display: flex; }
+    .config-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 460px; padding: 0; max-height: 90vh; overflow-y: auto; }
+    .config-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .config-titulo { font-size: 20px; font-weight: 900; }
+    .config-close { background: var(--card); border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .config-close:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    .config-body { padding: 24px 28px 28px; }
+    .config-section { margin-bottom: 28px; }
+    .config-section-titulo { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .config-info-row { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+    .config-info-avatar { width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .config-info-texto { overflow: hidden; }
+    .config-info-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .config-info-valor { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .config-pin-estado { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 16px; padding: 12px 14px; background: var(--card); border-radius: 10px; border: 1px solid var(--border); }
+    .config-pin-estado .pin-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .pin-dot.on { background: #22c55e; }
+    .pin-dot.off { background: var(--muted); }
+    .config-btn { width: 100%; border: none; border-radius: 8px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 10px; transition: all 0.2s; }
+    .config-btn-primary { background: var(--accent); color: white; }
+    .config-btn-primary:hover { background: #c40812; }
+    .config-btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .config-btn-secondary:hover { background: var(--border); }
+    .config-btn-danger { background: none; color: var(--accent2); border: 1px solid rgba(229,9,20,0.3); }
+    .config-btn-danger:hover { background: rgba(229,9,20,0.1); }
+    /* PANTALLA DE INGRESO DE PIN */
+    #pin-modal { display: none; position: fixed; inset: 0; z-index: 480; background: var(--bg); align-items: center; justify-content: center; padding: 20px; flex-direction: column; }
+    #pin-modal.active { display: flex; }
+    .pin-card { width: 100%; max-width: 360px; text-align: center; }
+    .pin-avatar-big { width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px; }
+    .pin-titulo { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .pin-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .pin-dots { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; }
+    .pin-dot-input { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); transition: all 0.15s; }
+    .pin-dot-input.filled { background: var(--accent); border-color: var(--accent); }
+    .pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 260px; margin: 0 auto; }
+    .pin-key { aspect-ratio: 1.4; background: var(--card); border: 1px solid var(--border); border-radius: 10px; font-size: 22px; font-weight: 600; color: var(--text); cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; display: flex; align-items: center; justify-content: center; }
+    .pin-key:hover { background: var(--border); }
+    .pin-key.pin-key-empty { background: none; border: none; cursor: default; }
+    .pin-key:active { background: var(--accent); color: white; }
+    .pin-error { color: var(--accent2); font-size: 14px; margin-top: 20px; min-height: 18px; }
+    .pin-cancel { margin-top: 24px; background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; text-decoration: underline; }
+    .pin-cancel:hover { color: var(--text); }
+    /* Selector de nivel de protección */
+    .nivel-opciones { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .nivel-opcion { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--card); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: border 0.15s; }
+    .nivel-opcion.sel { border-color: var(--accent); background: rgba(229,9,20,0.08); }
+    .nivel-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex-shrink: 0; margin-top: 2px; position: relative; }
+    .nivel-opcion.sel .nivel-radio { border-color: var(--accent); }
+    .nivel-opcion.sel .nivel-radio::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
+    .nivel-texto-titulo { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .nivel-texto-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
     @media (max-width: 600px) {
       nav { padding: 12px 16px; }
       #hero { padding: 40px 16px; }
@@ -211,7 +279,8 @@
       .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
       .search-box { width: 180px; }
       .login-card { padding: 32px 24px; }
-      #logout-btn, #logout-cuenta-btn { padding: 7px 10px; font-size: 11px; margin-left: 6px; }
+      #avatar-menu { right: 16px; top: 58px; min-width: 200px; }
+      #nav-avatar { width: 34px; height: 34px; font-size: 18px; margin-left: 8px; }
       #modal-body { padding: 16px; }
       .tab { padding: 8px 12px; font-size: 13px; }
       .player-btn { width: 44px; height: 44px; font-size: 18px; }
@@ -267,7 +336,7 @@
     <input type="text" class="pm-input" id="pm-nombre" placeholder="Ej: Papá" maxlength="20"/>
     <div class="pm-label">Elegí un ícono (o dejá vacío para usar la inicial)</div>
     <div class="pm-emojis" id="pm-emojis"></div>
-    <input type="text" class="pm-input" id="pm-emoji-custom" placeholder="O pegá tu propio emoji 😎" maxlength="4" style="margin-bottom:20px;"/>
+    <input type="text" class="pm-input" id="pm-emoji-custom" placeholder="O pegá un emoji 😎" maxlength="8" style="margin-bottom:20px;"/>
     <div class="pm-label">Color</div>
     <div class="pm-colors" id="pm-colors"></div>
     <div class="pm-buttons">
@@ -275,6 +344,79 @@
       <button class="pm-btn-save" id="pm-save">Guardar</button>
     </div>
     <div class="pm-error" id="pm-error"></div>
+  </div>
+</div>
+
+<!-- PANEL DE CONFIGURACIÓN -->
+<div id="config-modal">
+  <div class="config-card">
+    <div class="config-header">
+      <div class="config-titulo">Configuración</div>
+      <button class="config-close" id="config-close">✕</button>
+    </div>
+    <div class="config-body">
+      <div class="config-section">
+        <div class="config-section-titulo">Información</div>
+        <div class="config-info-row">
+          <div class="config-info-avatar" id="config-perfil-avatar"></div>
+          <div class="config-info-texto">
+            <div class="config-info-label">Perfil</div>
+            <div class="config-info-valor" id="config-perfil-nombre"></div>
+          </div>
+        </div>
+        <div class="config-info-row">
+          <div class="config-info-avatar" style="background:var(--card);border:1px solid var(--border);">👤</div>
+          <div class="config-info-texto">
+            <div class="config-info-label">Cuenta</div>
+            <div class="config-info-valor" id="config-cuenta"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-section">
+        <div class="config-section-titulo">Código PIN</div>
+        <div class="config-pin-estado">
+          <span class="pin-dot" id="config-pin-dot"></span>
+          <span id="config-pin-texto"></span>
+        </div>
+        <button class="config-btn config-btn-primary" id="config-pin-poner">🔒 Poner código</button>
+        <button class="config-btn config-btn-secondary" id="config-pin-cambiar">🔑 Cambiar código</button>
+        <button class="config-btn config-btn-secondary" id="config-pin-editar">✏️ Cambiar protección</button>
+        <button class="config-btn config-btn-danger" id="config-pin-eliminar">🗑️ Eliminar código</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PANTALLA DE INGRESO / CREACIÓN DE PIN -->
+<div id="pin-modal">
+  <div class="pin-card">
+    <div class="pin-avatar-big" id="pin-avatar"></div>
+    <div class="pin-titulo" id="pin-titulo">Ingresá tu código</div>
+    <div class="pin-sub" id="pin-sub"></div>
+
+    <!-- Selector de nivel (solo al crear) -->
+    <div class="nivel-opciones" id="pin-niveles" style="display:none;">
+      <div class="nivel-opcion sel" data-nivel="edicion">
+        <div class="nivel-radio"></div>
+        <div>
+          <div class="nivel-texto-titulo">Solo edición</div>
+          <div class="nivel-texto-desc">Pide el código para editar o borrar este perfil. Entrar es libre.</div>
+        </div>
+      </div>
+      <div class="nivel-opcion" data-nivel="total">
+        <div class="nivel-radio"></div>
+        <div>
+          <div class="nivel-texto-titulo">Todo (hasta el ingreso)</div>
+          <div class="nivel-texto-desc">Pide el código para entrar al perfil y también para editarlo o borrarlo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pin-dots" id="pin-dots"></div>
+    <div class="pin-keypad" id="pin-keypad"></div>
+    <div class="pin-error" id="pin-error"></div>
+    <button class="pin-cancel" id="pin-cancel">Cancelar</button>
   </div>
 </div>
 
@@ -287,10 +429,23 @@
       </svg>
       <input type="text" id="search-input" placeholder="Buscar..."/>
     </div>
-    <button id="logout-btn" title="Cambiar perfil">Cambiar perfil</button>
-    <button id="logout-cuenta-btn" title="Cerrar sesión">Salir</button>
+    <button id="nav-avatar" title="Perfil"></button>
   </div>
 </nav>
+
+<!-- MENÚ DEL AVATAR -->
+<div id="avatar-menu">
+  <div class="am-header">
+    <div class="am-header-avatar" id="am-header-avatar"></div>
+    <div class="am-header-info">
+      <div class="am-header-nombre" id="am-header-nombre"></div>
+      <div class="am-header-cuenta" id="am-header-cuenta"></div>
+    </div>
+  </div>
+  <button class="am-item" id="am-cambiar"><span class="am-icon">🔄</span> Cambiar perfil</button>
+  <button class="am-item" id="am-config"><span class="am-icon">⚙️</span> Configuración</button>
+  <button class="am-item danger" id="am-logout"><span class="am-icon">🚪</span> Cerrar sesión</button>
+</div>
 
 <div id="hero">
   <div id="hero-bg"></div>
@@ -499,15 +654,65 @@
     if (e.key === 'Enter') { document.getElementById('login-pass').focus(); }
   });
 
-  // Cerrar sesión (botón del nav) → vuelve a "¿Quién está viendo?"
-  document.getElementById('logout-btn').addEventListener('click', function() {
-    // Solo cambiar de perfil, no cerrar la cuenta entera
+  // ===================== MENÚ DEL AVATAR =====================
+
+  function actualizarNavAvatar() {
+    var perfil = getPerfilActivo();
+    if (!perfil) return;
+    var av = document.getElementById('nav-avatar');
+    av.textContent = avatarContenido(perfil.avatar, perfil.nombre);
+    av.style.background = perfil.color || '#e50914';
+
+    // Header del menú
+    document.getElementById('am-header-avatar').textContent = avatarContenido(perfil.avatar, perfil.nombre);
+    document.getElementById('am-header-avatar').style.background = perfil.color || '#e50914';
+    document.getElementById('am-header-nombre').textContent = perfil.nombre;
+    document.getElementById('am-header-cuenta').textContent = getNombreCuenta();
+  }
+
+  function getNombreCuenta() {
+    var session = getSession();
+    if (!session || !session.access_token) return '';
+    try {
+      var payload = session.access_token.split('.')[1];
+      payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+      var decoded = JSON.parse(atob(payload));
+      var email = decoded.email || '';
+      // Mostrar sin el @stream.local para que quede limpio
+      return email.replace(EMAIL_DOMAIN, '');
+    } catch (e) { return ''; }
+  }
+
+  // Toggle del menú
+  document.getElementById('nav-avatar').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('avatar-menu').classList.toggle('active');
+  });
+
+  // Cerrar menú al clickear afuera
+  document.addEventListener('click', function(e) {
+    var menu = document.getElementById('avatar-menu');
+    var avatar = document.getElementById('nav-avatar');
+    if (menu.classList.contains('active') && !menu.contains(e.target) && e.target !== avatar) {
+      menu.classList.remove('active');
+    }
+  });
+
+  // Cambiar perfil
+  document.getElementById('am-cambiar').addEventListener('click', function() {
+    document.getElementById('avatar-menu').classList.remove('active');
     clearPerfilActivo();
     location.reload();
   });
 
-  // Cerrar sesión de la cuenta completa (vuelve al login)
-  document.getElementById('logout-cuenta-btn').addEventListener('click', function() {
+  // Configuración
+  document.getElementById('am-config').addEventListener('click', function() {
+    document.getElementById('avatar-menu').classList.remove('active');
+    abrirConfig();
+  });
+
+  // Cerrar sesión (cuenta completa)
+  document.getElementById('am-logout').addEventListener('click', function() {
     var session = getSession();
     if (session && session.access_token) {
       fetch(SUPABASE_URL + '/auth/v1/logout', {
@@ -672,7 +877,14 @@
       item.addEventListener('click', function(e) {
         if (e.target.classList.contains('perfil-delete')) return;
         if (modoAdminPerfiles) {
-          abrirModalPerfil(p);
+          // Editar: si tiene PIN, pedirlo primero
+          if (p.pin) {
+            iniciarPinVerificar(p, 'Ingresá el código para editar', function() {
+              abrirModalPerfil(p);
+            });
+          } else {
+            abrirModalPerfil(p);
+          }
         } else {
           elegirPerfil(p);
         }
@@ -699,6 +911,19 @@
   }
 
   function elegirPerfil(perfil) {
+    // Si tiene PIN con nivel "total", pedir código para entrar
+    if (perfil.pin && perfil.pin_nivel === 'total') {
+      pinIntentoIngreso = true;
+      iniciarPinVerificar(perfil, 'Este perfil está protegido', function() {
+        pinIntentoIngreso = false;
+        entrarAlPerfil(perfil);
+      });
+      return;
+    }
+    entrarAlPerfil(perfil);
+  }
+
+  function entrarAlPerfil(perfil) {
     setPerfilActivo({ id: perfil.id, nombre: perfil.nombre, avatar: perfil.avatar, color: perfil.color });
     ocultarPerfiles();
     iniciarApp();
@@ -843,16 +1068,36 @@
 
   document.getElementById('pm-cancel').addEventListener('click', cerrarModalPerfil);
 
-  // Emoji propio: al escribir, se usa como avatar y se deselecciona la galería
+  // Emoji propio: al escribir, se usa como avatar (solo 1 carácter/emoji) y se deselecciona la galería
   document.getElementById('pm-emoji-custom').addEventListener('input', function() {
     var val = this.value.trim();
+    // Cortar a un solo símbolo visible (soporta emojis de varios code points)
     if (val) {
+      var simbolos = Array.from(val);
+      // Un emoji puede venir con modificadores (tono de piel, ZWJ). Tomamos el primer "grupo".
+      var primero = simbolos[0];
+      // Si el siguiente code point es un modificador/variante, lo incluimos
+      for (var i = 1; i < simbolos.length; i++) {
+        var code = simbolos[i].codePointAt(0);
+        var esModificador = (code >= 0x1F3FB && code <= 0x1F3FF) || // tonos de piel
+                            code === 0x200D || // zero-width joiner
+                            code === 0xFE0F || // variation selector
+                            (code >= 0x1F1E6 && code <= 0x1F1FF); // banderas
+        if (esModificador || (simbolos[i-1] && simbolos[i-1].codePointAt(0) === 0x200D)) {
+          primero += simbolos[i];
+        } else {
+          break;
+        }
+      }
+      if (val !== primero) {
+        this.value = primero;
+        val = primero;
+      }
       pmAvatarSel = val;
-      marcarEmojiSel(); // ninguno queda marcado porque no está en la galería
     } else {
       pmAvatarSel = '';
-      marcarEmojiSel();
     }
+    marcarEmojiSel();
     actualizarPreview();
   });
 
@@ -919,7 +1164,18 @@
   });
 
   function borrarPerfil(perfil) {
+    // Si tiene PIN, pedirlo antes de borrar
+    if (perfil.pin) {
+      iniciarPinVerificar(perfil, 'Ingresá el código para eliminar', function() {
+        ejecutarBorradoPerfil(perfil);
+      });
+      return;
+    }
     if (!confirm('¿Eliminar el perfil "' + perfil.nombre + '"?')) return;
+    ejecutarBorradoPerfil(perfil);
+  }
+
+  function ejecutarBorradoPerfil(perfil) {
     fetch(SUPABASE_URL + '/rest/v1/perfiles?id=eq.' + perfil.id, {
       method: 'DELETE',
       headers: authHeaders()
@@ -1655,13 +1911,393 @@
     else if (e.key === 'Enter') { e.preventDefault(); if (cards[tvFocusIndex]) cards[tvFocusIndex].click(); }
   });
 
-  // ===================== ARRANQUE =====================
+  // ===================== CONFIGURACIÓN Y PIN =====================
+
+  // Estado del flujo de PIN
+  var pinModo = null;         // 'crear', 'verificar-eliminar', 'verificar-editar', 'verificar-ingreso'
+  var pinBuffer = '';
+  var pinPrimeraVez = '';     // para confirmar al crear
+  var pinConfirmando = false;
+  var pinNivelSel = 'edicion';
+  var pinCreandoDesdeCero = true;
+  var pinCallback = null;     // qué hacer cuando el PIN se verifica OK
+  var pinPerfilCtx = null;    // perfil sobre el que se opera
+
+  function abrirConfig() {
+    var perfil = getPerfilActivo();
+    if (!perfil) return;
+    // Traer datos frescos del perfil desde cache
+    var pData = buscarPerfilEnCache(perfil.id) || perfil;
+
+    document.getElementById('config-perfil-avatar').textContent = avatarContenido(pData.avatar, pData.nombre);
+    document.getElementById('config-perfil-avatar').style.background = pData.color || '#e50914';
+    document.getElementById('config-perfil-nombre').textContent = pData.nombre;
+    document.getElementById('config-cuenta').textContent = getNombreCuenta();
+
+    actualizarEstadoPin(pData);
+    document.getElementById('config-modal').classList.add('active');
+  }
+
+  function buscarPerfilEnCache(id) {
+    for (var i = 0; i < perfilesCache.length; i++) {
+      if (perfilesCache[i].id === id) return perfilesCache[i];
+    }
+    return null;
+  }
+
+  function actualizarEstadoPin(pData) {
+    var tienePin = !!(pData && pData.pin);
+    var dot = document.getElementById('config-pin-dot');
+    var texto = document.getElementById('config-pin-texto');
+    var btnPoner = document.getElementById('config-pin-poner');
+    var btnCambiar = document.getElementById('config-pin-cambiar');
+    var btnEditar = document.getElementById('config-pin-editar');
+    var btnEliminar = document.getElementById('config-pin-eliminar');
+
+    if (tienePin) {
+      dot.className = 'pin-dot on';
+      var nivelTxt = (pData.pin_nivel === 'total') ? 'Protege ingreso y edición' : 'Protege solo edición';
+      texto.textContent = 'Código activo — ' + nivelTxt;
+      btnPoner.style.display = 'none';
+      btnCambiar.style.display = 'block';
+      btnEditar.style.display = 'block';
+      btnEliminar.style.display = 'block';
+    } else {
+      dot.className = 'pin-dot off';
+      texto.textContent = 'Sin código configurado';
+      btnPoner.style.display = 'block';
+      btnCambiar.style.display = 'none';
+      btnEditar.style.display = 'none';
+      btnEliminar.style.display = 'none';
+    }
+  }
+
+  document.getElementById('config-close').addEventListener('click', function() {
+    document.getElementById('config-modal').classList.remove('active');
+  });
+
+  // Poner código nuevo
+  document.getElementById('config-pin-poner').addEventListener('click', function() {
+    document.getElementById('config-modal').classList.remove('active');
+    iniciarPinCrear();
+  });
+
+  // Cambiar código — pide el actual, después deja poner uno nuevo (mantiene el nivel)
+  document.getElementById('config-pin-cambiar').addEventListener('click', function() {
+    var perfil = getPerfilActivo();
+    var pData = buscarPerfilEnCache(perfil.id);
+    document.getElementById('config-modal').classList.remove('active');
+    iniciarPinVerificar(pData, 'Ingresá tu código actual', function() {
+      // PIN correcto → poner código nuevo, conservando el nivel actual
+      iniciarPinCrear(pData.pin_nivel || 'edicion');
+    });
+  });
+
+  // Cambiar protección (nivel) — primero verifica el PIN actual, después deja re-elegir nivel
+  document.getElementById('config-pin-editar').addEventListener('click', function() {
+    var perfil = getPerfilActivo();
+    var pData = buscarPerfilEnCache(perfil.id);
+    document.getElementById('config-modal').classList.remove('active');
+    iniciarPinVerificar(pData, 'Ingresá tu código actual', function() {
+      // PIN correcto → elegir nuevo nivel (reusa la pantalla de crear pero sin cambiar el pin)
+      iniciarPinCambiarNivel(pData);
+    });
+  });
+
+  // Eliminar código — pide el actual primero
+  document.getElementById('config-pin-eliminar').addEventListener('click', function() {
+    var perfil = getPerfilActivo();
+    var pData = buscarPerfilEnCache(perfil.id);
+    document.getElementById('config-modal').classList.remove('active');
+    iniciarPinVerificar(pData, 'Ingresá tu código para eliminarlo', function() {
+      // PIN correcto → borrar el pin en Supabase
+      guardarPinEnPerfil(pData.id, null, null, function(ok) {
+        if (ok) {
+          alert('Código eliminado');
+        } else {
+          alert('Error al eliminar el código');
+        }
+      });
+    });
+  });
+
+  // ---------- Pantalla de PIN (keypad) ----------
+
+  function construirKeypad() {
+    var kp = document.getElementById('pin-keypad');
+    if (kp.children.length > 0) return; // ya construido
+    var teclas = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+    teclas.forEach(function(t) {
+      var b = document.createElement('button');
+      if (t === '') {
+        b.className = 'pin-key pin-key-empty';
+        b.disabled = true;
+      } else {
+        b.className = 'pin-key';
+        b.textContent = t;
+        b.addEventListener('click', function() { pulsarTeclaPin(t); });
+      }
+      kp.appendChild(b);
+    });
+  }
+
+  function construirDots() {
+    var cont = document.getElementById('pin-dots');
+    cont.innerHTML = '';
+    for (var i = 0; i < 6; i++) {
+      var d = document.createElement('div');
+      d.className = 'pin-dot-input';
+      cont.appendChild(d);
+    }
+  }
+
+  function pintarDots() {
+    var dots = document.getElementById('pin-dots').children;
+    for (var i = 0; i < dots.length; i++) {
+      if (i < pinBuffer.length) dots[i].classList.add('filled');
+      else dots[i].classList.remove('filled');
+    }
+  }
+
+  function pulsarTeclaPin(t) {
+    document.getElementById('pin-error').textContent = '';
+    if (t === '⌫') {
+      pinBuffer = pinBuffer.slice(0, -1);
+      pintarDots();
+      return;
+    }
+    if (pinBuffer.length >= 6) return;
+    pinBuffer += t;
+    pintarDots();
+    if (pinBuffer.length === 6) {
+      setTimeout(procesarPinCompleto, 150);
+    }
+  }
+
+  function procesarPinCompleto() {
+    if (pinModo === 'crear') {
+      if (!pinConfirmando) {
+        // Primera vez → guardar y pedir confirmación
+        pinPrimeraVez = pinBuffer;
+        pinBuffer = '';
+        pinConfirmando = true;
+        pintarDots();
+        document.getElementById('pin-titulo').textContent = 'Confirmá tu código';
+        document.getElementById('pin-sub').textContent = 'Ingresalo de nuevo';
+        document.getElementById('pin-niveles').style.display = 'none';
+      } else {
+        // Segunda vez → comparar
+        if (pinBuffer === pinPrimeraVez) {
+          guardarPinEnPerfil(pinPerfilCtx.id, pinPrimeraVez, pinNivelSel, function(ok) {
+            if (ok) {
+              cerrarPinModal();
+              alert('Código configurado');
+            } else {
+              document.getElementById('pin-error').textContent = 'Error al guardar';
+              pinBuffer = ''; pintarDots();
+            }
+          });
+        } else {
+          document.getElementById('pin-error').textContent = 'Los códigos no coinciden';
+          pinBuffer = ''; pinPrimeraVez = ''; pinConfirmando = false;
+          pintarDots();
+          // Volver a la primera pantalla del mismo modo
+          if (pinCreandoDesdeCero) {
+            document.getElementById('pin-titulo').textContent = 'Creá tu código';
+            document.getElementById('pin-sub').textContent = 'Elegí un código de 6 dígitos';
+            document.getElementById('pin-niveles').style.display = 'flex';
+          } else {
+            document.getElementById('pin-titulo').textContent = 'Nuevo código';
+            document.getElementById('pin-sub').textContent = 'Elegí tu nuevo código de 6 dígitos';
+          }
+        }
+      }
+    } else if (pinModo === 'cambiar-nivel') {
+      // Reusar el buffer no aplica: el nivel se elige con los botones, el PIN ya está.
+      // Este modo no llega acá por dígitos.
+    } else {
+      // Modos de verificación
+      if (pinBuffer === (pinPerfilCtx && pinPerfilCtx.pin)) {
+        var cb = pinCallback;
+        cerrarPinModal();
+        if (cb) cb();
+      } else {
+        document.getElementById('pin-error').textContent = 'Código incorrecto';
+        pinBuffer = ''; pintarDots();
+      }
+    }
+  }
+
+  function iniciarPinCrear(nivelFijo) {
+    pinModo = 'crear';
+    pinBuffer = ''; pinPrimeraVez = ''; pinConfirmando = false;
+    pinPerfilCtx = buscarPerfilEnCache(getPerfilActivo().id);
+
+    var perfil = getPerfilActivo();
+    document.getElementById('pin-avatar').textContent = avatarContenido(perfil.avatar, perfil.nombre);
+    document.getElementById('pin-avatar').style.background = perfil.color || '#e50914';
+
+    if (nivelFijo) {
+      // Modo "cambiar código": el nivel ya está definido, no lo mostramos
+      pinCreandoDesdeCero = false;
+      pinNivelSel = nivelFijo;
+      document.getElementById('pin-titulo').textContent = 'Nuevo código';
+      document.getElementById('pin-sub').textContent = 'Elegí tu nuevo código de 6 dígitos';
+      document.getElementById('pin-niveles').style.display = 'none';
+    } else {
+      // Modo "poner código" desde cero: elegir nivel
+      pinCreandoDesdeCero = true;
+      pinNivelSel = 'edicion';
+      document.getElementById('pin-titulo').textContent = 'Creá tu código';
+      document.getElementById('pin-sub').textContent = 'Elegí un código de 6 dígitos';
+      document.getElementById('pin-niveles').style.display = 'flex';
+      marcarNivel('edicion');
+    }
+
+    construirKeypad();
+    construirDots();
+    pintarDots();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function iniciarPinVerificar(pData, subtitulo, callback) {
+    pinModo = 'verificar';
+    pinBuffer = '';
+    pinPerfilCtx = pData;
+    pinCallback = callback;
+
+    document.getElementById('pin-avatar').textContent = avatarContenido(pData.avatar, pData.nombre);
+    document.getElementById('pin-avatar').style.background = pData.color || '#e50914';
+    document.getElementById('pin-titulo').textContent = 'Ingresá tu código';
+    document.getElementById('pin-sub').textContent = subtitulo || '';
+    document.getElementById('pin-niveles').style.display = 'none';
+    construirKeypad();
+    construirDots();
+    pintarDots();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function iniciarPinCambiarNivel(pData) {
+    // Pantalla especial: solo elegir nivel y guardar (el PIN se mantiene)
+    pinModo = 'cambiar-nivel';
+    pinPerfilCtx = pData;
+    pinNivelSel = pData.pin_nivel || 'edicion';
+
+    document.getElementById('pin-avatar').textContent = avatarContenido(pData.avatar, pData.nombre);
+    document.getElementById('pin-avatar').style.background = pData.color || '#e50914';
+    document.getElementById('pin-titulo').textContent = 'Nivel de protección';
+    document.getElementById('pin-sub').textContent = 'Elegí qué protege el código';
+    document.getElementById('pin-niveles').style.display = 'flex';
+    marcarNivel(pinNivelSel);
+    // Ocultar keypad y dots, mostrar botón guardar improvisado
+    document.getElementById('pin-dots').style.display = 'none';
+    document.getElementById('pin-keypad').style.display = 'none';
+    // Reusar el botón cancelar como "guardar" temporalmente sería confuso; agregamos uno
+    mostrarBotonGuardarNivel();
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function mostrarBotonGuardarNivel() {
+    var existente = document.getElementById('pin-guardar-nivel');
+    if (existente) existente.remove();
+    var btn = document.createElement('button');
+    btn.id = 'pin-guardar-nivel';
+    btn.className = 'config-btn config-btn-primary';
+    btn.style.maxWidth = '260px';
+    btn.style.margin = '0 auto 12px';
+    btn.textContent = 'Guardar';
+    btn.addEventListener('click', function() {
+      guardarPinEnPerfil(pinPerfilCtx.id, pinPerfilCtx.pin, pinNivelSel, function(ok) {
+        if (ok) { cerrarPinModal(); alert('Protección actualizada'); }
+        else { document.getElementById('pin-error').textContent = 'Error al guardar'; }
+      });
+    });
+    var errorEl = document.getElementById('pin-error');
+    errorEl.parentNode.insertBefore(btn, errorEl);
+  }
+
+  function marcarNivel(nivel) {
+    var opciones = document.querySelectorAll('.nivel-opcion');
+    opciones.forEach(function(op) {
+      if (op.getAttribute('data-nivel') === nivel) op.classList.add('sel');
+      else op.classList.remove('sel');
+    });
+    pinNivelSel = nivel;
+  }
+
+  // Click en las opciones de nivel
+  document.querySelectorAll('.nivel-opcion').forEach(function(op) {
+    op.addEventListener('click', function() {
+      marcarNivel(op.getAttribute('data-nivel'));
+    });
+  });
+
+  function cerrarPinModal() {
+    document.getElementById('pin-modal').classList.remove('active');
+    document.body.style.overflow = '';
+    // Restaurar keypad y dots por si venían ocultos
+    document.getElementById('pin-dots').style.display = 'flex';
+    document.getElementById('pin-keypad').style.display = 'grid';
+    var btnNivel = document.getElementById('pin-guardar-nivel');
+    if (btnNivel) btnNivel.remove();
+    pinBuffer = ''; pinPrimeraVez = ''; pinConfirmando = false;
+    pinModo = null; pinCallback = null;
+  }
+
+  document.getElementById('pin-cancel').addEventListener('click', function() {
+    // Si estábamos verificando para ENTRAR a un perfil, cancelar vuelve a la selección
+    var eraIngreso = (pinModo === 'verificar' && pinIntentoIngreso);
+    cerrarPinModal();
+    if (eraIngreso) {
+      pinIntentoIngreso = false;
+      // Ya estamos en pantalla de perfiles, no hace falta más
+    }
+  });
+
+  // Soporte de teclado físico (para TV/PC)
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('pin-modal').classList.contains('active')) return;
+    if (e.key >= '0' && e.key <= '9') { pulsarTeclaPin(e.key); }
+    else if (e.key === 'Backspace') { e.preventDefault(); pulsarTeclaPin('⌫'); }
+    else if (e.key === 'Escape') { document.getElementById('pin-cancel').click(); }
+  });
+
+  // Guardar el PIN (o nulo para borrar) en Supabase
+  function guardarPinEnPerfil(perfilId, pin, nivel, callback) {
+    fetch(SUPABASE_URL + '/rest/v1/perfiles?id=eq.' + perfilId, {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ pin: pin, pin_nivel: nivel })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        // Actualizar cache local
+        var p = buscarPerfilEnCache(perfilId);
+        if (p) { p.pin = pin; p.pin_nivel = nivel; }
+        if (callback) callback(true);
+      } else {
+        if (callback) callback(false);
+      }
+    })
+    .catch(function() { if (callback) callback(false); });
+  }
+
+  var pinIntentoIngreso = false;
+
+
 
   var appIniciada = false;
   function iniciarApp() {
-    if (appIniciada) return; // evitar doble arranque
+    if (appIniciada) return;
     appIniciada = true;
-    detectarTV();
+    try { actualizarNavAvatar(); } catch (e) { console.error('Error nav avatar:', e); }
+    try { detectarTV(); } catch (e) { console.error('Error detectarTV:', e); }
     cargarPeliculas();
   }
 
