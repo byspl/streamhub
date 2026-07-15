@@ -14,11 +14,14 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: linear-gradient(to bottom, rgba(10,10,15,0.98), rgba(10,10,15,0.85), transparent); }
-    .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: var(--accent); text-transform: uppercase; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; background: linear-gradient(to bottom, rgba(10,10,15,0.98), rgba(10,10,15,0.85), transparent); gap: 16px; }
+    .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; color: var(--accent); text-transform: uppercase; flex-shrink: 0; }
     .search-box { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; width: 280px; }
     .search-box input { background: none; border: none; outline: none; color: var(--text); font-size: 14px; width: 100%; font-family: 'Inter', sans-serif; }
     .search-box input::placeholder { color: var(--muted); }
+    #search-clear { display: none; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px 6px; flex-shrink: 0; border-radius: 50%; line-height: 1; }
+    #search-clear:hover { color: var(--text); background: var(--border); }
+    #search-clear.visible { display: block; }
     #hero { position: relative; height: 70vh; min-height: 500px; display: flex; align-items: flex-end; padding: 60px 40px; overflow: hidden; }
     #hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center top; }
     #hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(10,10,15,0.7) 40%, rgba(10,10,15,0.2) 100%); }
@@ -143,6 +146,10 @@
     .login-field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .login-field input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border 0.2s; }
     .login-field input:focus { border-color: var(--accent); }
+    .pass-wrap { position: relative; }
+    .pass-wrap input { padding-right: 44px; }
+    .pass-toggle { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; padding: 8px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: color 0.15s; }
+    .pass-toggle:hover { color: var(--text); }
     #login-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s; margin-top: 8px; }
     #login-btn:hover { background: #c40812; }
     #login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -150,7 +157,7 @@
     /* Botón cerrar sesión en nav */
     #logout-btn, #logout-cuenta-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; margin-left: 12px; white-space: nowrap; }
     #logout-btn:hover, #logout-cuenta-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
-    .nav-right { display: flex; align-items: center; }
+    .nav-right { display: flex; align-items: center; gap: 12px; min-width: 0; }
     /* PANTALLA DE PERFILES */
     #perfiles-screen { display: none; position: fixed; inset: 0; z-index: 450; background: var(--bg); flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
     #perfiles-screen.active { display: flex; }
@@ -268,7 +275,9 @@
     .nivel-texto-titulo { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
     .nivel-texto-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
     @media (max-width: 600px) {
-      nav { padding: 12px 16px; }
+      nav { padding: 10px 12px; gap: 8px; }
+      .logo { font-size: 18px; letter-spacing: -0.5px; flex-shrink: 0; }
+      .nav-right { gap: 6px; flex-shrink: 0; }
       #hero { padding: 40px 16px; }
       #catalogo { padding: 16px 16px 40px; }
       #tipos-container { padding: 10px 16px 0; }
@@ -277,14 +286,20 @@
       .carrusel-card { width: 115px; }
       .carrusel-titulo { font-size: 16px; }
       .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-      .search-box { width: 180px; }
+      .search-box { width: auto; flex: 1; min-width: 0; padding: 7px 10px; gap: 6px; }
+      .search-box input { min-width: 0; font-size: 13px; }
       .login-card { padding: 32px 24px; }
-      #avatar-menu { right: 16px; top: 58px; min-width: 200px; }
-      #nav-avatar { width: 34px; height: 34px; font-size: 18px; margin-left: 8px; }
+      #avatar-menu { right: 10px; top: 54px; min-width: 190px; }
+      #nav-avatar { width: 32px; height: 32px; font-size: 16px; margin-left: 0; flex-shrink: 0; }
       #modal-body { padding: 16px; }
       .tab { padding: 8px 12px; font-size: 13px; }
       .player-btn { width: 44px; height: 44px; font-size: 18px; }
       #modal-close { top: 12px; right: 12px; }
+    }
+    @media (max-width: 380px) {
+      .logo { font-size: 16px; }
+      .search-box { padding: 6px 8px; }
+      .search-box svg { display: none; }
     }
     @media (min-width: 1400px) {
       nav { padding: 20px 60px; }
@@ -310,7 +325,10 @@
     </div>
     <div class="login-field">
       <label for="login-pass">Contraseña</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+      <div class="pass-wrap">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+        <button type="button" class="pass-toggle" id="pass-toggle" title="Mostrar contraseña">👁️</button>
+      </div>
     </div>
     <button id="login-btn">Entrar</button>
     <div id="login-error"></div>
@@ -428,6 +446,7 @@
         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
       </svg>
       <input type="text" id="search-input" placeholder="Buscar..."/>
+      <button id="search-clear" title="Limpiar búsqueda">✕</button>
     </div>
     <button id="nav-avatar" title="Perfil"></button>
   </div>
@@ -652,6 +671,15 @@
   });
   document.getElementById('login-email').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { document.getElementById('login-pass').focus(); }
+  });
+
+  // Mostrar/ocultar contraseña
+  document.getElementById('pass-toggle').addEventListener('click', function() {
+    var input = document.getElementById('login-pass');
+    var visible = input.type === 'text';
+    input.type = visible ? 'password' : 'text';
+    this.textContent = visible ? '👁️' : '🙈';
+    this.title = visible ? 'Mostrar contraseña' : 'Ocultar contraseña';
   });
 
   // ===================== MENÚ DEL AVATAR =====================
@@ -1825,9 +1853,18 @@
   document.getElementById('search-input').addEventListener('input', function(e) {
     clearTimeout(searchTimeout);
     var q = e.target.value.toLowerCase().trim();
+    document.getElementById('search-clear').classList.toggle('visible', q.length > 0);
     searchTimeout = setTimeout(function() {
       filtrarYRender(q);
     }, 300);
+  });
+
+  document.getElementById('search-clear').addEventListener('click', function() {
+    var input = document.getElementById('search-input');
+    input.value = '';
+    this.classList.remove('visible');
+    filtrarYRender('');
+    input.focus();
   });
 
   // ===================== NAVEGACION TV =====================
