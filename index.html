@@ -64,7 +64,12 @@
     .carrusel { display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; padding-bottom: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
     .carrusel::-webkit-scrollbar { height: 6px; }
     .carrusel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .carrusel-card { flex: 0 0 auto; width: 140px; cursor: pointer; border-radius: 10px; overflow: hidden; background: var(--card); border: 1px solid var(--border); transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; scroll-snap-align: start; }
+    .carrusel-card { flex: 0 0 auto; width: 140px; cursor: pointer; border-radius: 10px; overflow: hidden; background: var(--card); border: 1px solid var(--border); transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; scroll-snap-align: start; position: relative; }
+    /* Botón X para quitar de "Continuar viendo" */
+    .card-quitar { position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0,0,0,0.75); border: 1px solid rgba(255,255,255,0.25); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1; z-index: 3; padding: 0; }
+    .card-quitar:hover { background: var(--accent); border-color: var(--accent); }
+    /* Etiqueta de episodio en "Continuar viendo" */
+    .card-episodio { position: absolute; bottom: 42px; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: #fff; font-size: 11px; font-weight: 600; padding: 12px 8px 4px; }
     .carrusel-card:hover, .carrusel-card.tv-focused { transform: translateY(-6px) scale(1.03); border-color: var(--accent); box-shadow: 0 12px 32px rgba(229,9,20,0.25); }
     .carrusel-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
     .carrusel-card .cc-info { padding: 8px 10px; }
@@ -99,6 +104,9 @@
     #modal-meta { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px; flex-wrap: wrap; }
     #modal-genero { display: inline-block; background: rgba(229,9,20,0.15); color: var(--accent2); border: 1px solid rgba(229,9,20,0.3); padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 14px; }
     #modal-desc { font-size: 14px; line-height: 1.8; color: #bbb; margin-bottom: 24px; }
+    #btn-mi-lista { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 24px; transition: all 0.2s; }
+    #btn-mi-lista:hover { border-color: var(--accent); }
+    #btn-mi-lista.activo { background: rgba(229,9,20,0.15); border-color: var(--accent); color: var(--accent2); }
     .servidores-titulo { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
     #servidores-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
     .servidor-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; text-transform: capitalize; }
@@ -514,6 +522,18 @@
 <div id="catalogo">
   <!-- CARRUSELES tipo Netflix (solo en Todas sin búsqueda) -->
   <div id="carruseles">
+    <div class="carrusel-seccion" id="carrusel-continuar-wrap" style="display:none;">
+      <div class="carrusel-titulo">▶️ Continuar viendo</div>
+      <div class="carrusel" id="carrusel-continuar"></div>
+    </div>
+    <div class="carrusel-seccion" id="carrusel-milista-wrap" style="display:none;">
+      <div class="carrusel-titulo">🔖 Mi Lista</div>
+      <div class="carrusel" id="carrusel-milista"></div>
+    </div>
+    <div class="carrusel-seccion" id="carrusel-recomendadas-wrap" style="display:none;">
+      <div class="carrusel-titulo">✨ Recomendadas para vos</div>
+      <div class="carrusel" id="carrusel-recomendadas"></div>
+    </div>
     <div class="carrusel-seccion" id="carrusel-recientes-wrap">
       <div class="carrusel-titulo">🆕 Recién agregadas</div>
       <div class="carrusel" id="carrusel-recientes"></div>
@@ -549,6 +569,7 @@
       </div>
       <div id="modal-genero"></div>
       <p id="modal-desc"></p>
+      <button id="btn-mi-lista">+ Mi Lista</button>
 
       <!-- SERIES: temporadas y episodios (oculto para películas) -->
       <div id="series-section" style="display:none;">
@@ -965,7 +986,15 @@
   function entrarAlPerfil(perfil) {
     setPerfilActivo({ id: perfil.id, nombre: perfil.nombre, avatar: perfil.avatar, color: perfil.color });
     ocultarPerfiles();
-    iniciarApp();
+    if (appIniciada) {
+      // Ya estaba la app cargada: solo refrescar los datos del perfil nuevo
+      try { actualizarNavAvatar(); } catch (e) {}
+      cargarDatosPerfil().then(function() {
+        actualizarVisibilidadCarruseles(document.getElementById('search-input').value.toLowerCase().trim());
+      });
+    } else {
+      iniciarApp();
+    }
   }
 
   document.getElementById('perfiles-admin-btn').addEventListener('click', function() {
@@ -1543,9 +1572,209 @@
     return card;
   }
 
+  // ===================== HISTORIAL / MI LISTA / RECOMENDADAS =====================
+
+  var historialCache = [];
+  var favoritosCache = [];
+  var DIAS_CONTINUAR = 10; // los del historial se ocultan pasados estos dias
+  // Que se esta viendo ahora (para guardar en historial al reproducir)
+  var contenidoActual = null;      // el objeto pelicula o serie
+  var contenidoEsSerie = false;
+  var temporadaActualNombre = '';  // solo series
+
+  // --- Cargar datos del perfil activo ---
+  function cargarDatosPerfil() {
+    var perfil = getPerfilActivo();
+    if (!perfil) { historialCache = []; favoritosCache = []; return Promise.resolve(); }
+
+    var pHist = fetch(SUPABASE_URL + '/rest/v1/historial?perfil_id=eq.' + perfil.id + '&order=visto_en.desc', { headers: authHeaders() })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(d) { historialCache = Array.isArray(d) ? d : []; })
+      .catch(function() { historialCache = []; });
+
+    var pFav = fetch(SUPABASE_URL + '/rest/v1/favoritos?perfil_id=eq.' + perfil.id + '&order=agregado_en.desc', { headers: authHeaders() })
+      .then(function(r) { return r.ok ? r.json() : []; })
+      .then(function(d) { favoritosCache = Array.isArray(d) ? d : []; })
+      .catch(function() { favoritosCache = []; });
+
+    return Promise.all([pHist, pFav]);
+  }
+
+  // --- Guardar en historial (al reproducir) ---
+  function guardarEnHistorial(item, esSerie, datosEpisodio) {
+    var perfil = getPerfilActivo();
+    if (!perfil || !item) return;
+
+    var registro = {
+      perfil_id: perfil.id,
+      contenido_id: item.id,
+      tipo: esSerie ? 'serie' : 'pelicula',
+      titulo: item.titulo,
+      imagen: item.imagen,
+      genero: item.genero || '',
+      visto_en: new Date().toISOString()
+    };
+    if (esSerie && datosEpisodio) {
+      registro.temporada = datosEpisodio.temporada || '';
+      registro.episodio_numero = datosEpisodio.numero || null;
+      registro.episodio_titulo = datosEpisodio.titulo || '';
+    }
+
+    // upsert: si ya existe (mismo perfil+contenido+tipo) lo actualiza
+    fetch(SUPABASE_URL + '/rest/v1/historial?on_conflict=perfil_id,contenido_id,tipo', {
+      method: 'POST',
+      headers: Object.assign({}, authHeaders(), { 'Prefer': 'resolution=merge-duplicates' }),
+      body: JSON.stringify(registro)
+    }).then(function() {
+      // Refrescar cache local para que la fila se actualice
+      var idx = historialCache.findIndex(function(h) {
+        return h.contenido_id === item.id && h.tipo === registro.tipo;
+      });
+      if (idx >= 0) historialCache.splice(idx, 1);
+      historialCache.unshift(registro);
+      actualizarVisibilidadCarruseles(document.getElementById('search-input').value.toLowerCase().trim());
+    }).catch(function() {});
+  }
+
+  // --- Quitar del historial (la X) ---
+  function quitarDelHistorial(contenidoId, tipo) {
+    var perfil = getPerfilActivo();
+    if (!perfil) return;
+    fetch(SUPABASE_URL + '/rest/v1/historial?perfil_id=eq.' + perfil.id + '&contenido_id=eq.' + contenidoId + '&tipo=eq.' + tipo, {
+      method: 'DELETE',
+      headers: authHeaders()
+    }).then(function() {
+      historialCache = historialCache.filter(function(h) {
+        return !(h.contenido_id === contenidoId && h.tipo === tipo);
+      });
+      renderCarruseles();
+    }).catch(function() {});
+  }
+
+  // --- Mi Lista: alternar favorito ---
+  function esFavorito(contenidoId, tipo) {
+    return favoritosCache.some(function(f) { return f.contenido_id === contenidoId && f.tipo === tipo; });
+  }
+
+  function alternarFavorito(item, esSerie, botonEl) {
+    var perfil = getPerfilActivo();
+    if (!perfil || !item) return;
+    var tipo = esSerie ? 'serie' : 'pelicula';
+
+    if (esFavorito(item.id, tipo)) {
+      // Quitar
+      fetch(SUPABASE_URL + '/rest/v1/favoritos?perfil_id=eq.' + perfil.id + '&contenido_id=eq.' + item.id + '&tipo=eq.' + tipo, {
+        method: 'DELETE', headers: authHeaders()
+      }).then(function() {
+        favoritosCache = favoritosCache.filter(function(f) { return !(f.contenido_id === item.id && f.tipo === tipo); });
+        if (botonEl) actualizarBotonFavorito(botonEl, false);
+        renderCarruseles();
+      }).catch(function() {});
+    } else {
+      // Agregar
+      var registro = {
+        perfil_id: perfil.id, contenido_id: item.id, tipo: tipo,
+        titulo: item.titulo, imagen: item.imagen
+      };
+      fetch(SUPABASE_URL + '/rest/v1/favoritos', {
+        method: 'POST', headers: authHeaders(), body: JSON.stringify(registro)
+      }).then(function() {
+        favoritosCache.unshift(registro);
+        if (botonEl) actualizarBotonFavorito(botonEl, true);
+        renderCarruseles();
+      }).catch(function() {});
+    }
+  }
+
+  function actualizarBotonFavorito(boton, activo) {
+    boton.textContent = activo ? '✓ En Mi Lista' : '+ Mi Lista';
+    boton.classList.toggle('activo', activo);
+  }
+
+  // --- Recomendadas: por género que mira el perfil + calificación ---
+  function calcularRecomendadas(fuente, esSerie) {
+    var tipo = esSerie ? 'serie' : 'pelicula';
+    var vistosIds = historialCache.filter(function(h) { return h.tipo === tipo; })
+                                  .map(function(h) { return h.contenido_id; });
+
+    // Contar géneros del historial de este perfil
+    var conteoGeneros = {};
+    historialCache.forEach(function(h) {
+      if (!h.genero) return;
+      h.genero.split(',').forEach(function(g) {
+        g = g.trim();
+        if (g) conteoGeneros[g] = (conteoGeneros[g] || 0) + 1;
+      });
+    });
+    var generosFavoritos = Object.keys(conteoGeneros).sort(function(a, b) {
+      return conteoGeneros[b] - conteoGeneros[a];
+    }).slice(0, 3);
+
+    // Sin historial todavía → no hay nada personalizado que recomendar
+    if (generosFavoritos.length === 0) return [];
+
+    var candidatos = fuente.filter(function(item) {
+      if (vistosIds.indexOf(item.id) !== -1) return false;   // ya lo vio
+      if (!item.genero) return false;
+      return generosFavoritos.some(function(g) {
+        return item.genero.toLowerCase().indexOf(g.toLowerCase()) !== -1;
+      });
+    });
+
+    // Ordenar por calificación (mejores primero)
+    candidatos.sort(function(a, b) {
+      var ca = parseFloat(a.calificacion) || 0;
+      var cb = parseFloat(b.calificacion) || 0;
+      return cb - ca;
+    });
+    return candidatos.slice(0, 15);
+  }
+
+  // --- Continuar viendo: del historial, no muy viejos ---
+  function calcularContinuarViendo(fuente, esSerie) {
+    var tipo = esSerie ? 'serie' : 'pelicula';
+    var limite = Date.now() - (DIAS_CONTINUAR * 24 * 60 * 60 * 1000);
+    var items = [];
+    historialCache.forEach(function(h) {
+      if (h.tipo !== tipo) return;
+      var fecha = h.visto_en ? new Date(h.visto_en).getTime() : 0;
+      if (fecha < limite) return;                       // muy viejo, se oculta solo
+      var item = fuente.find(function(x) { return x.id === h.contenido_id; });
+      if (item) items.push({ item: item, hist: h });
+    });
+    return items.slice(0, 15);
+  }
+
   function renderCarruseles() {
     var fuente = (tipoActual === 'series') ? todasLasSeries : todasLasPeliculas;
     var esSerie = (tipoActual === 'series');
+
+    // ---- Continuar viendo ----
+    var continuar = calcularContinuarViendo(fuente, esSerie);
+    var contCont = document.getElementById('carrusel-continuar');
+    contCont.innerHTML = '';
+    continuar.forEach(function(c) {
+      contCont.appendChild(crearCardContinuar(c.item, c.hist, esSerie));
+    });
+    document.getElementById('carrusel-continuar-wrap').style.display = continuar.length ? 'block' : 'none';
+
+    // ---- Mi Lista ----
+    var tipoStr = esSerie ? 'serie' : 'pelicula';
+    var favs = favoritosCache.filter(function(f) { return f.tipo === tipoStr; })
+      .map(function(f) { return fuente.find(function(x) { return x.id === f.contenido_id; }); })
+      .filter(function(x) { return !!x; })
+      .slice(0, 15);
+    var contFav = document.getElementById('carrusel-milista');
+    contFav.innerHTML = '';
+    favs.forEach(function(item) { contFav.appendChild(crearCarruselCard(item, esSerie)); });
+    document.getElementById('carrusel-milista-wrap').style.display = favs.length ? 'block' : 'none';
+
+    // ---- Recomendadas ----
+    var recomendadas = calcularRecomendadas(fuente, esSerie);
+    var contRecom = document.getElementById('carrusel-recomendadas');
+    contRecom.innerHTML = '';
+    recomendadas.forEach(function(item) { contRecom.appendChild(crearCarruselCard(item, esSerie)); });
+    document.getElementById('carrusel-recomendadas-wrap').style.display = recomendadas.length ? 'block' : 'none';
 
     // Recién agregadas = orden original (id desc, como viene de Supabase). Primeras 15.
     var recientes = fuente.slice(0, 15);
@@ -1566,6 +1795,38 @@
     document.getElementById('carrusel-novedades-wrap').style.display = novedades.length ? 'block' : 'none';
   }
 
+  // Card especial de "Continuar viendo": muestra el episodio y tiene X para quitar
+  function crearCardContinuar(item, hist, esSerie) {
+    var card = document.createElement('div');
+    card.className = 'carrusel-card';
+    card.tabIndex = 0;
+
+    var etiquetaEp = '';
+    if (esSerie && hist.episodio_titulo) {
+      etiquetaEp = '<div class="card-episodio">' + hist.episodio_titulo + '</div>';
+    }
+    var metaDer = esSerie
+      ? ((item.temporadas ? item.temporadas.length : 0) + ' temp.')
+      : (item.año || '');
+
+    card.innerHTML =
+      '<img src="' + item.imagen + '" alt="' + item.titulo + '" loading="lazy" onerror="this.src=\'https://via.placeholder.com/300x450/1a1a24/666?text=Sin+imagen\'"/>' +
+      etiquetaEp +
+      '<button class="card-quitar" title="Quitar de Continuar viendo">✕</button>' +
+      '<div class="cc-info"><div class="cc-titulo">' + item.titulo + '</div>' +
+      '<div class="cc-meta">' + metaDer + '</div></div>';
+
+    card.addEventListener('click', function() {
+      if (esSerie) { abrirModalSerie(item); }
+      else { abrirModalPelicula(item, false); }
+    });
+    card.querySelector('.card-quitar').addEventListener('click', function(e) {
+      e.stopPropagation();
+      quitarDelHistorial(item.id, esSerie ? 'serie' : 'pelicula');
+    });
+    return card;
+  }
+
   // Muestra u oculta los carruseles según contexto (solo en "Todas" sin búsqueda)
   function actualizarVisibilidadCarruseles(query) {
     var carruseles = document.getElementById('carruseles');
@@ -1583,6 +1844,9 @@
   function abrirModalPelicula(pelicula, autoplay) {
     modalAbierto = true;
     servidorFocusIndex = 0;
+    contenidoActual = pelicula;
+    contenidoEsSerie = false;
+    temporadaActualNombre = '';
 
     document.getElementById('series-section').style.display = 'none';
     document.getElementById('peliculas-section').style.display = 'block';
@@ -1593,6 +1857,7 @@
     document.getElementById('modal-año').textContent = pelicula.año || '';
     document.getElementById('modal-genero').textContent = pelicula.genero || '';
     document.getElementById('modal-desc').textContent = pelicula.descripcion || 'Sin descripción disponible.';
+    actualizarBotonFavorito(document.getElementById('btn-mi-lista'), esFavorito(pelicula.id, 'pelicula'));
 
     var btns = document.getElementById('servidores-btns');
     btns.innerHTML = '';
@@ -1637,6 +1902,9 @@
   function abrirModalSerie(serie) {
     modalAbierto = true;
     servidorFocusIndex = 0;
+    contenidoActual = serie;
+    contenidoEsSerie = true;
+    temporadaActualNombre = '';
 
     document.getElementById('peliculas-section').style.display = 'none';
     document.getElementById('series-section').style.display = 'block';
@@ -1647,6 +1915,7 @@
     document.getElementById('modal-año').textContent = serie.año || '';
     document.getElementById('modal-genero').textContent = serie.genero || '';
     document.getElementById('modal-desc').textContent = serie.descripcion || 'Sin descripción disponible.';
+    actualizarBotonFavorito(document.getElementById('btn-mi-lista'), esFavorito(serie.id, 'serie'));
 
     resetPlayer();
 
@@ -1664,10 +1933,12 @@
         btn.addEventListener('click', function() {
           document.querySelectorAll('.temporada-btn').forEach(function(b) { b.classList.remove('active'); });
           btn.classList.add('active');
+          temporadaActualNombre = t.nombre || ('Temporada ' + t.numero);
           renderEpisodios(t.episodios || []);
         });
         tempContainer.appendChild(btn);
       });
+      temporadaActualNombre = temporadas[0].nombre || ('Temporada ' + temporadas[0].numero);
       renderEpisodios(temporadas[0].episodios || []);
     }
 
@@ -1699,6 +1970,14 @@
       item.addEventListener('click', function() {
         document.querySelectorAll('.episodio-item').forEach(function(e) { e.classList.remove('active'); });
         item.classList.add('active');
+        // Guardar en historial: serie + donde quedo
+        if (contenidoActual && contenidoEsSerie) {
+          guardarEnHistorial(contenidoActual, true, {
+            temporada: temporadaActualNombre,
+            numero: ep.numero,
+            titulo: ep.titulo || ('Episodio ' + ep.numero)
+          });
+        }
         abrirServidoresEpisodio(ep);
       });
       lista.appendChild(item);
@@ -1752,6 +2031,13 @@
     var player = document.getElementById('player-container');
     var iframe = document.getElementById('player-iframe');
     var spinner = document.getElementById('player-spinner');
+
+    // Guardar en historial: para peliculas basta con esto (las series ya se
+    // guardan al elegir episodio, con el dato del capitulo)
+    if (contenidoActual && !contenidoEsSerie) {
+      guardarEnHistorial(contenidoActual, false, null);
+    }
+
     iframe.src = '';
     player.classList.add('active');
     spinner.classList.add('active');
@@ -1859,6 +2145,12 @@
   }
 
   document.getElementById('modal-close').addEventListener('click', cerrarModal);
+
+  // Botón "Mi Lista" del modal
+  document.getElementById('btn-mi-lista').addEventListener('click', function() {
+    if (!contenidoActual) return;
+    alternarFavorito(contenidoActual, contenidoEsSerie, this);
+  });
 
   var searchTimeout;
   document.getElementById('search-input').addEventListener('input', function(e) {
@@ -2408,7 +2700,12 @@
     appIniciada = true;
     try { actualizarNavAvatar(); } catch (e) { console.error('Error nav avatar:', e); }
     try { detectarTV(); } catch (e) { console.error('Error detectarTV:', e); }
-    cargarPeliculas();
+    // Cargar historial y favoritos del perfil, después el catálogo
+    cargarDatosPerfil().then(function() {
+      cargarPeliculas();
+    }).catch(function() {
+      cargarPeliculas();
+    });
   }
 
   // Al cargar la página: chequear sesión. Si hay → arranca app. Si no → login.
